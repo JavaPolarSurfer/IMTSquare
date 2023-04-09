@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<head>
+  <title>Spring Security Example </title>
+</head>
+<body>
+<form th:action="@{/signup}" method="post" th:object="${user}">
+  <div>
+    <label> First Name : <input type="text" name="firstName" th:field="*{firstName}"/></label>
+    <span  style="color:red" th:if="${errorFirstNameEmpty}"  th:text="${errorFirstNameEmpty}">Error</span>
+  </div>
+  <div>
+    <label> Last Name : <input type="text" name="lastName" th:field="*{lastName}"/></label>
+    <span  style="color:red" th:if="${errorLastNameEmpty}"  th:text="${errorLastNameEmpty}">Error</span>
+  </div>
+  <div>
+    <label> Email : <input type="email" name="email" th:field="*{email}"/></label>
+    <span  style="color:red" th:if="${errorUserAlreadyExists}"  th:text="${errorUserAlreadyExists}">Error</span>
+  </div>
+  <div>
+    <label> Password: <input type="password" name="password" th:field="*{password}"/> </label>
+    <span  style="color:red" th:if="${errorPasswordEmpty}"  th:text="${errorPasswordEmpty}">Error</span>
+  </div>
+  <div>
+    <label> Confirm Password: <input type="password" name="matchingPassword" th:field="*{matchingPassword}"/> </label>
+    <span  style="color:red" th:if="${errorNonMatchingPasswords}"  th:text="${errorNonMatchingPasswords}">Error</span>
+  </div>
+  <div>
+    <input type="submit" value="Sign up"/>
+  </div>
+</form>
+</body>
+</html>
