@@ -1,6 +1,5 @@
 package tr.edu.metu.ii.AnyChange.controller;
 
-import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -8,8 +7,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 import tr.edu.metu.ii.AnyChange.dto.UserDTO;
 import tr.edu.metu.ii.AnyChange.user.*;
+
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 
 @Controller
 @AllArgsConstructor
@@ -58,6 +61,11 @@ public class MainController {
                 model.addAttribute("errorNonMatchingPasswords", "Passwords do not match!");
                 hasError = true;
             }
+            if (userDto.getPassword().length() < 8) {
+                model.addAttribute("errorShortPassword",
+                        "Password is too short, it should be at least 8 characters long!");
+                hasError = true;
+            }
 
             if (hasError) {
                 return "signup";
@@ -73,10 +81,25 @@ public class MainController {
     }
 
     @GetMapping("/confirm")
-    String confirmUser(@RequestParam("token") String token) {
+    String confirmUser(@RequestParam("token") String token, Model model) {
         try {
             ConfirmationToken confirmationToken = confirmationTokenService.findConfirmationToken(token);
+            if (LocalDate.now().minus(120, ChronoUnit.SECONDS).isBefore(confirmationToken.getCreatedDate())) {
+                return "expiredToken";
+            }
             userService.confirmUser(confirmationToken);
+            return "login";
+        } catch (InvalidConfirmationTokenException e) {
+            return "home";
+        }
+    }
+
+    @GetMapping("/resendConfirmationToken")
+    String resendConfirmationToken(@RequestParam("token") String token) {
+        try {
+            ConfirmationToken oldConfirmationToken = confirmationTokenService.findConfirmationToken(token);
+            userService.sendConfirmationToken(oldConfirmationToken.getUser());
+            confirmationTokenService.deleteConfirmationToken(oldConfirmationToken);
             return "login";
         } catch (InvalidConfirmationTokenException e) {
             return "home";

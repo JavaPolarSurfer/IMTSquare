@@ -27,6 +27,12 @@ public class UserService implements UserDetailsService {
         return optionalUser.get();
     }
 
+    public void sendConfirmationToken(User user) {
+        ConfirmationToken confirmationToken = new ConfirmationToken(user);
+        confirmationTokenService.saveConfirmationToken(confirmationToken);
+        sendConfirmationEmail(user.getEmail(), confirmationToken.getToken());
+    }
+
     public boolean checkIfUserExists(String username) {
         Optional<User> optionalUser = userRepository.findByEmail(username);
         return optionalUser.isPresent();
@@ -42,17 +48,18 @@ public class UserService implements UserDetailsService {
         user.setFirstName(userDTO.getFirstName());
         user.setLastName(userDTO.getLastName());
         user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
-        userRepository.save(user);
-
-        ConfirmationToken confirmationToken = new ConfirmationToken(user);
-        confirmationTokenService.saveConfirmationToken(confirmationToken);
-        sendConfirmationEmail(user.getEmail(), confirmationToken.getToken());
+        createUser(user);
+        sendConfirmationToken(user);
     }
 
     public void confirmUser(ConfirmationToken confirmationToken) {
         User user = confirmationToken.getUser();
         user.setEnabled(true);
         confirmationTokenService.deleteConfirmationToken(confirmationToken);
+    }
+
+    public void createUser(User user) throws UsernameAlreadyExistsException {
+        userRepository.save(user);
     }
 
     public void sendConfirmationEmail(String email, String token) {

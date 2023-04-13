@@ -10,6 +10,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import tr.edu.metu.ii.AnyChange.user.User;
+import tr.edu.metu.ii.AnyChange.user.UserRole;
 import tr.edu.metu.ii.AnyChange.user.UserService;
 
 @Configuration
@@ -21,7 +23,7 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests((requests) -> requests
-                    .requestMatchers("/", "/home", "/signup", "/confirm*").permitAll()
+                    .requestMatchers("/", "/home", "/signup", "/confirm*", "/resendConfirmationToken*").permitAll()
                     .anyRequest().authenticated()
             )
             .formLogin((form) -> form
@@ -34,6 +36,14 @@ public class WebSecurityConfig {
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+        User user = new User();
+        user.setEmail("admin");
+        user.setFirstName("admin");
+        user.setLastName("admin");
+        user.setPassword(passwordEncoder.encode("admin"));
+        user.setRole(UserRole.ADMIN);
+        user.setEnabled(true);
+        userService.createUser(user);
         auth.userDetailsService(userService).passwordEncoder(passwordEncoder);
     }
 }
