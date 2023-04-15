@@ -12,6 +12,8 @@ import tr.edu.metu.ii.AnyChange.user.*;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Controller
 @AllArgsConstructor
@@ -63,6 +65,13 @@ public class MainController {
             if (userDto.getPassword().length() < 8) {
                 model.addAttribute("errorShortPassword",
                         "Password is too short, it should be at least 8 characters long!");
+                hasError = true;
+            }
+            Pattern regex = Pattern.compile("[^A-Za-z0-9]");
+            Matcher matcher = regex.matcher(userDto.getPassword());
+            if (!matcher.find()) {
+                model.addAttribute("errorPasswordSpecialCharacters",
+                        "Password must include at least one special character!");
                 hasError = true;
             }
 

@@ -21,6 +21,7 @@
     <label> Password: <input type="password" name="password" th:field="*{password}"/> </label>
     <span  style="color:red" th:if="${errorPasswordEmpty}"  th:text="${errorPasswordEmpty}">Error</span>
     <span  style="color:red" th:if="${errorShortPassword}"  th:text="${errorShortPassword}">Error</span>
+    <span  style="color:red" th:if="${errorPasswordSpecialCharacters}"  th:text="${errorPasswordSpecialCharacters}">Error</span>
   </div>
   <div>
     <label> Confirm Password: <input type="password" name="matchingPassword" th:field="*{matchingPassword}"/> </label>
