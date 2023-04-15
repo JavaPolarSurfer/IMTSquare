@@ -1,4 +1,4 @@
-package tr.edu.metu.ii.AnyChange.user;
+package tr.edu.metu.ii.AnyChange.user.services;
 
 import lombok.AllArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;

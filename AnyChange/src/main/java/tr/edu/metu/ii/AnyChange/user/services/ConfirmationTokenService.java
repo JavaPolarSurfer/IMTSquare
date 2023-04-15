@@ -1,7 +1,10 @@
-package tr.edu.metu.ii.AnyChange.user;
+package tr.edu.metu.ii.AnyChange.user.services;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import tr.edu.metu.ii.AnyChange.user.models.ConfirmationToken;
+import tr.edu.metu.ii.AnyChange.user.repositories.ConfirmationTokenRepository;
+import tr.edu.metu.ii.AnyChange.user.exceptions.InvalidConfirmationTokenException;
 
 import java.util.Optional;
 

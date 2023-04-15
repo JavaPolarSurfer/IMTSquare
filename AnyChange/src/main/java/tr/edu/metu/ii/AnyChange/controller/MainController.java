@@ -1,6 +1,7 @@
 package tr.edu.metu.ii.AnyChange.controller;
 
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,12 +9,10 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import tr.edu.metu.ii.AnyChange.dto.UserDTO;
-import tr.edu.metu.ii.AnyChange.user.*;
-
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import tr.edu.metu.ii.AnyChange.user.exceptions.*;
+import tr.edu.metu.ii.AnyChange.user.models.ConfirmationToken;
+import tr.edu.metu.ii.AnyChange.user.services.ConfirmationTokenService;
+import tr.edu.metu.ii.AnyChange.user.services.UserService;
 
 @Controller
 @AllArgsConstructor
@@ -45,44 +44,29 @@ public class MainController {
     @PostMapping("/signup")
     String registerUser(@ModelAttribute("user") UserDTO userDto, Model model) {
         try {
-            boolean hasError = false;
-            if (userDto.getFirstName().isEmpty()) {
-                model.addAttribute("errorFirstNameEmpty", "First name cannot be empty!");
-                hasError = true;
-            }
-            if (userDto.getLastName().isEmpty()) {
-                model.addAttribute("errorLastNameEmpty", "Last name cannot be empty!");
-                hasError = true;
-            }
-            if (userDto.getPassword().isEmpty()) {
-                model.addAttribute("errorPasswordEmpty", "Password cannot be empty!");
-                hasError = true;
-            }
-            if (!userDto.getPassword().equals(userDto.getMatchingPassword())) {
-                model.addAttribute("errorNonMatchingPasswords", "Passwords do not match!");
-                hasError = true;
-            }
-            if (userDto.getPassword().length() < 8) {
-                model.addAttribute("errorShortPassword",
-                        "Password is too short, it should be at least 8 characters long!");
-                hasError = true;
-            }
-            Pattern regex = Pattern.compile("[^A-Za-z0-9]");
-            Matcher matcher = regex.matcher(userDto.getPassword());
-            if (!matcher.find()) {
-                model.addAttribute("errorPasswordSpecialCharacters",
-                        "Password must include at least one special character!");
-                hasError = true;
-            }
-
-            if (hasError) {
-                return "signup";
-            }
-            else {
-                userService.createUser(userDto);
-            }
+            userService.createUser(userDto);
         } catch (UsernameAlreadyExistsException e) {
             model.addAttribute("errorUserAlreadyExists", "User already exists!");
+            return "signup";
+        } catch (PasswordEmptyException e) {
+            model.addAttribute("errorPasswordEmpty", "Password cannot be empty!");
+            return "signup";
+        } catch (PasswordTooShortException e) {
+            model.addAttribute("errorShortPassword",
+                    "Password is too short, it should be at least 8 characters long!");
+            return "signup";
+        } catch (PasswordNotMatchingException e) {
+            model.addAttribute("errorNonMatchingPasswords", "Passwords do not match!");
+            return "signup";
+        } catch (PasswordSpecialCharactersException e) {
+            model.addAttribute("errorPasswordSpecialCharacters",
+                    "Password must include at least one special character!");
+            return "signup";
+        } catch (FirstNameEmptyException e) {
+            model.addAttribute("errorFirstNameEmpty", "First name cannot be empty!");
+            return "signup";
+        } catch (LastNameEmptyException e) {
+            model.addAttribute("errorLastNameEmpty", "Last name cannot be empty!");
             return "signup";
         }
         return "home";
@@ -91,15 +75,13 @@ public class MainController {
     @GetMapping("/confirm")
     String confirmUser(@RequestParam("token") String token, Model model) {
         try {
-            ConfirmationToken confirmationToken = confirmationTokenService.findConfirmationToken(token);
-            if (LocalDateTime.now().minus(120, ChronoUnit.SECONDS).isAfter(confirmationToken.getCreatedDate())) {
-                return "expiredToken";
-            }
-            userService.confirmUser(confirmationToken);
-            return "login";
+            userService.confirmUser(token);
         } catch (InvalidConfirmationTokenException e) {
             return "home";
+        } catch (ExpiredTokenException e) {
+            return "expiredToken";
         }
+        return "login";
     }
 
     @GetMapping("/resendConfirmationToken")
@@ -108,9 +90,57 @@ public class MainController {
             ConfirmationToken oldConfirmationToken = confirmationTokenService.findConfirmationToken(token);
             userService.sendConfirmationToken(oldConfirmationToken.getUser());
             confirmationTokenService.deleteConfirmationToken(oldConfirmationToken);
-            return "login";
         } catch (InvalidConfirmationTokenException e) {
             return "home";
         }
+        return "login";
+    }
+
+    @GetMapping("/forgotPassword")
+    String forgotPassword() {
+        return "forgotPassword";
+    }
+
+    @PostMapping("/forgotPassword")
+    String forgotPassword(String username, Model model) {
+        try {
+            userService.forgotPassword(username);
+        } catch (UsernameNotFoundException e) {
+            model.addAttribute("errorUsernameNotFound", "User does not exist!");
+            return "forgotPassword";
+        }
+        return "login";
+    }
+
+    @GetMapping("/resetPassword")
+    String resetPassword(@RequestParam("token") String token, Model model) {
+        model.addAttribute("token", token);
+        return "resetPassword";
+    }
+
+    @PostMapping("/resetPassword")
+    String resetPassword(@RequestParam("token") String token, String password, String matchingPassword, Model model) {
+        try {
+            userService.resetPassword(token, password, matchingPassword);
+        } catch (InvalidConfirmationTokenException e) {
+            return "home";
+        } catch (ExpiredTokenException e) {
+            return "expiredResetPasswordToken";
+        } catch (PasswordEmptyException e) {
+            model.addAttribute("errorPasswordEmpty", "Password cannot be empty!");
+            return "resetPassword";
+        } catch (PasswordTooShortException e) {
+            model.addAttribute("errorShortPassword",
+                    "Password is too short, it should be at least 8 characters long!");
+            return "resetPassword";
+        } catch (PasswordNotMatchingException e) {
+            model.addAttribute("errorNonMatchingPasswords", "Passwords do not match!");
+            return "resetPassword";
+        } catch (PasswordSpecialCharactersException e) {
+            model.addAttribute("errorPasswordSpecialCharacters",
+                    "Password must include at least one special character!");
+            return "resetPassword";
+        }
+        return "login";
     }
 }

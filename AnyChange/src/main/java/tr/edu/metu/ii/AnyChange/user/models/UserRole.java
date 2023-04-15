@@ -1,4 +1,4 @@
-package tr.edu.metu.ii.AnyChange.user;
+package tr.edu.metu.ii.AnyChange.user.models;
 
 public enum UserRole {
     USER,

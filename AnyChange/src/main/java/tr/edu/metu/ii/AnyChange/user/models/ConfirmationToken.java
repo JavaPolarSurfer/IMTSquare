@@ -1,4 +1,4 @@
-package tr.edu.metu.ii.AnyChange.user;
+package tr.edu.metu.ii.AnyChange.user.models;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -27,7 +27,7 @@ public class ConfirmationToken {
     @JoinColumn(nullable = false, name = "user_id")
     private User user;
 
-    ConfirmationToken(User user) {
+    public ConfirmationToken(User user) {
         this.user = user;
         this.createdDate = LocalDateTime.now();
         this.token = UUID.randomUUID().toString();

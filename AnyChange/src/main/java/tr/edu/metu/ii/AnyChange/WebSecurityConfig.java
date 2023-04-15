@@ -10,9 +10,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import tr.edu.metu.ii.AnyChange.user.User;
-import tr.edu.metu.ii.AnyChange.user.UserRole;
-import tr.edu.metu.ii.AnyChange.user.UserService;
+import tr.edu.metu.ii.AnyChange.user.models.User;
+import tr.edu.metu.ii.AnyChange.user.models.UserRole;
+import tr.edu.metu.ii.AnyChange.user.services.UserService;
 
 @Configuration
 @EnableWebSecurity
@@ -23,7 +23,7 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests((requests) -> requests
-                    .requestMatchers("/", "/home", "/signup", "/confirm*", "/resendConfirmationToken*").permitAll()
+                    .requestMatchers("/", "/home", "/signup", "/confirm*", "/resendConfirmationToken*", "/forgotPassword", "/resetPassword*").permitAll()
                     .anyRequest().authenticated()
             )
             .formLogin((form) -> form
@@ -37,11 +37,11 @@ public class WebSecurityConfig {
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         User user = new User();
-        user.setEmail("admin");
+        user.setEmail("taylan.isikoglu@gmail.com");
         user.setFirstName("admin");
         user.setLastName("admin");
-        user.setPassword(passwordEncoder.encode("admin"));
-        user.setRole(UserRole.ADMIN);
+        user.setPassword(passwordEncoder.encode("123123123."));
+        user.setRole(UserRole.USER);
         user.setEnabled(true);
         userService.createUser(user);
         auth.userDetailsService(userService).passwordEncoder(passwordEncoder);
