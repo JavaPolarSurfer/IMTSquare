@@ -7,11 +7,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.ModelAndView;
 import tr.edu.metu.ii.AnyChange.dto.UserDTO;
 import tr.edu.metu.ii.AnyChange.user.*;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
 @Controller
@@ -84,7 +83,7 @@ public class MainController {
     String confirmUser(@RequestParam("token") String token, Model model) {
         try {
             ConfirmationToken confirmationToken = confirmationTokenService.findConfirmationToken(token);
-            if (LocalDate.now().minus(120, ChronoUnit.SECONDS).isBefore(confirmationToken.getCreatedDate())) {
+            if (LocalDateTime.now().minus(120, ChronoUnit.SECONDS).isAfter(confirmationToken.getCreatedDate())) {
                 return "expiredToken";
             }
             userService.confirmUser(confirmationToken);
