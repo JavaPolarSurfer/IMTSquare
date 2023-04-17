@@ -1,4 +1,4 @@
-package tr.edu.metu.ii.AnyChange.dto;
+package tr.edu.metu.ii.AnyChange.user.dto;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;

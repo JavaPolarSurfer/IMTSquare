@@ -7,7 +7,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import tr.edu.metu.ii.AnyChange.dto.UserDTO;
+import tr.edu.metu.ii.AnyChange.user.dto.UserDTO;
 import tr.edu.metu.ii.AnyChange.user.exceptions.*;
 import tr.edu.metu.ii.AnyChange.user.models.ConfirmationToken;
 import tr.edu.metu.ii.AnyChange.user.models.User;

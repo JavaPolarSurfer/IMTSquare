@@ -1,4 +1,4 @@
-package tr.edu.metu.ii.AnyChange.controller;
+package tr.edu.metu.ii.AnyChange.user.controller;
 
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import tr.edu.metu.ii.AnyChange.dto.UserDTO;
+import tr.edu.metu.ii.AnyChange.user.dto.UserDTO;
 import tr.edu.metu.ii.AnyChange.user.exceptions.*;
 import tr.edu.metu.ii.AnyChange.user.models.ConfirmationToken;
 import tr.edu.metu.ii.AnyChange.user.services.ConfirmationTokenService;
@@ -16,7 +16,7 @@ import tr.edu.metu.ii.AnyChange.user.services.UserService;
 
 @Controller
 @AllArgsConstructor
-public class MainController {
+public class UserController {
     final private UserService userService;
     final private ConfirmationTokenService confirmationTokenService;
     @GetMapping("/")
