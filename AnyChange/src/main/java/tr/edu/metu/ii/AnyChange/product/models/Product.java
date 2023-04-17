@@ -3,8 +3,8 @@ package tr.edu.metu.ii.AnyChange.product.models;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Getter
 @Setter
@@ -17,8 +17,8 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    @OneToMany
-    private ArrayList<ProductUrl> productUrls;
+    @OneToMany(fetch = FetchType.LAZY)
+    private List<ProductUrl> productUrls;
     @ManyToMany
-    private HashMap<PriceSource, PriceInformation> productPrices;
+    private Map<PriceSource, PriceInformation> productPrices;
 }

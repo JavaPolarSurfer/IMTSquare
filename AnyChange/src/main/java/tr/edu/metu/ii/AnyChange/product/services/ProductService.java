@@ -1,8 +1,10 @@
 package tr.edu.metu.ii.AnyChange.product.services;
 
+import jakarta.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import tr.edu.metu.ii.AnyChange.product.dto.PriceSourceDTO;
 import tr.edu.metu.ii.AnyChange.product.dto.ProductDTO;
 import tr.edu.metu.ii.AnyChange.product.exceptions.NoSuchPriceSourceException;
@@ -10,19 +12,44 @@ import tr.edu.metu.ii.AnyChange.product.exceptions.NoSuchProductException;
 import tr.edu.metu.ii.AnyChange.product.models.PricePoint;
 import tr.edu.metu.ii.AnyChange.product.models.PriceSource;
 import tr.edu.metu.ii.AnyChange.product.models.Product;
+import tr.edu.metu.ii.AnyChange.product.models.ProductUrl;
 import tr.edu.metu.ii.AnyChange.product.repositories.PriceSourceRepository;
 import tr.edu.metu.ii.AnyChange.product.repositories.ProductRepository;
+import tr.edu.metu.ii.AnyChange.product.repositories.ProductUrlRepository;
 
+import javax.script.ScriptException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 @AllArgsConstructor
+@Transactional
 public class ProductService {
     final ProductRepository productRepository;
     final PriceSourceRepository priceSourceRepository;
     final PriceSourceService priceSourceService;
+    final ProductUrlRepository productUrlRepository;
+
+    @PostConstruct
+    private void initializeRepo() {
+        PriceSource priceSource = new PriceSource();
+        priceSource.setName("test");
+        priceSource.setScript("print \"hello\"");
+        priceSourceRepository.save(priceSource);
+
+        ProductUrl productUrl = new ProductUrl();
+        productUrl.setUrl("test");
+        productUrl.setPriceSource(priceSource);
+        productUrlRepository.save(productUrl);
+
+        Product product = new Product();
+        product.setName("test");
+        ArrayList<ProductUrl> productUrls = new ArrayList<>();
+        product.setProductUrls(productUrls);
+        productUrls.add(productUrl);
+        productRepository.save(product);
+    }
 
     public List<ProductDTO> getMatchingProducts(String keyword) {
         List<Product> products = productRepository.search(keyword);
@@ -57,11 +84,10 @@ public class ProductService {
     }
 
     @Scheduled(fixedRate = 1000)
-    private void updateCurrentPrices() {
+    public void updateCurrentPrices() {
         productRepository.findAll().forEach(product -> {
             product.getProductUrls().forEach(productUrl -> {
                 PricePoint pricePoint = priceSourceService.fetchCurrentPrice(productUrl);
-                product.getProductPrices().get(productUrl.getPriceSource()).setCurrentPrice(pricePoint);
             });
         });
     }
