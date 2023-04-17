@@ -1,6 +1,7 @@
 package tr.edu.metu.ii.AnyChange.product.services;
 
 import lombok.AllArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import tr.edu.metu.ii.AnyChange.product.dto.PriceSourceDTO;
 import tr.edu.metu.ii.AnyChange.product.dto.ProductDTO;
@@ -55,6 +56,7 @@ public class ProductService {
         return product.getProductPrices().get(priceSource).getCurrentPrice();
     }
 
+    @Scheduled(fixedRate = 1000)
     private void updateCurrentPrices() {
         productRepository.findAll().forEach(product -> {
             product.getProductUrls().forEach(productUrl -> {
