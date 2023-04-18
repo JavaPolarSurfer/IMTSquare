@@ -17,7 +17,6 @@ import tr.edu.metu.ii.AnyChange.product.repositories.PriceSourceRepository;
 import tr.edu.metu.ii.AnyChange.product.repositories.ProductRepository;
 import tr.edu.metu.ii.AnyChange.product.repositories.ProductUrlRepository;
 
-import javax.script.ScriptException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
