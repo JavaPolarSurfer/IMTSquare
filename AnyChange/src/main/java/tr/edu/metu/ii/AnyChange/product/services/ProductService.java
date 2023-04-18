@@ -33,17 +33,17 @@ public class ProductService {
     @PostConstruct
     private void initializeRepo() {
         PriceSource priceSource = new PriceSource();
-        priceSource.setName("test");
-        priceSource.setScript("print \"hello\"");
+        priceSource.setName("trendyol");
+        priceSource.setScript("trendyol");
         priceSourceRepository.save(priceSource);
 
         ProductUrl productUrl = new ProductUrl();
-        productUrl.setUrl("test");
+        productUrl.setUrl("https://www.trendyol.com/baby-turco/dogadan-bebek-bezi-ekonomik-paket-junior-5-numara-160-adet-p-176119387?boutiqueId=61&merchantId=386464");
         productUrl.setPriceSource(priceSource);
         productUrlRepository.save(productUrl);
 
         Product product = new Product();
-        product.setName("test");
+        product.setName("Baby Turco Doğadan Bebek Bezi Ekonomik Paket Junior 5 Numara 160 Adet");
         ArrayList<ProductUrl> productUrls = new ArrayList<>();
         product.setProductUrls(productUrls);
         productUrls.add(productUrl);

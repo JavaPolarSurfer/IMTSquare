@@ -8,6 +8,7 @@ import tr.edu.metu.ii.AnyChange.product.models.ProductUrl;
 import tr.edu.metu.ii.AnyChange.product.repositories.PriceSourceRepository;
 
 import java.io.*;
+import java.nio.file.FileSystems;
 
 @Service
 public class PriceSourceService {
@@ -18,12 +19,12 @@ public class PriceSourceService {
 
     public PricePoint fetchCurrentPrice(ProductUrl productUrl) {
         try {
-            ProcessBuilder processBuilder = new ProcessBuilder("python", scriptsPath + "/hello.py").inheritIO();
+            ProcessBuilder processBuilder = new ProcessBuilder("python",
+                    scriptsPath + FileSystems.getDefault().getSeparator() + productUrl.getPriceSource().getScript() + ".py",
+                    productUrl.getUrl()).inheritIO();
             Process process = processBuilder.start();
             int exitCode = process.waitFor();
-        }  catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (InterruptedException e) {
+        }  catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }
 
