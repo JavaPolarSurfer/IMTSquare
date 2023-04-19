@@ -9,6 +9,7 @@ import tr.edu.metu.ii.AnyChange.product.repositories.PriceSourceRepository;
 
 import java.io.*;
 import java.nio.file.FileSystems;
+import java.time.LocalDateTime;
 
 @Service
 public class PriceSourceService {
@@ -21,13 +22,16 @@ public class PriceSourceService {
         try {
             ProcessBuilder processBuilder = new ProcessBuilder("python",
                     scriptsPath + FileSystems.getDefault().getSeparator() + productUrl.getPriceSource().getScript() + ".py",
-                    productUrl.getUrl()).inheritIO();
+                    productUrl.getUrl());
             Process process = processBuilder.start();
+            String output = process.inputReader().readLine();
             int exitCode = process.waitFor();
+            PricePoint pricePoint = new PricePoint();
+            pricePoint.setPoint(LocalDateTime.now());
+            pricePoint.setPrice(Double.parseDouble(output));
+            return pricePoint;
         }  catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }
-
-        return new PricePoint();
     }
 }

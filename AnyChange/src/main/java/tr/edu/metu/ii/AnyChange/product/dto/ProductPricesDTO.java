@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class PriceSourceDTO {
-    private long id;
-    private String name;
+public class ProductPricesDTO {
+    private String priceSourceName;
+    private String price;
 }

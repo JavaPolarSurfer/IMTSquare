@@ -29,9 +29,9 @@ public class UserController {
         return "login";
     }
 
-    @GetMapping("/hello")
-    String onHello() {
-        return "hello";
+    @GetMapping("/products")
+    String onProducts() {
+        return "products";
     }
 
     @GetMapping("/signup")

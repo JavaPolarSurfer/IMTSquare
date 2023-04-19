@@ -15,6 +15,6 @@ public class PriceInformation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @OneToOne
+    @OneToOne(cascade=CascadeType.ALL)
     private PricePoint currentPrice;
 }

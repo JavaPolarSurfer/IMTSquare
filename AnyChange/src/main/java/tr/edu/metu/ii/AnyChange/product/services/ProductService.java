@@ -9,15 +9,12 @@ import tr.edu.metu.ii.AnyChange.product.dto.PriceSourceDTO;
 import tr.edu.metu.ii.AnyChange.product.dto.ProductDTO;
 import tr.edu.metu.ii.AnyChange.product.exceptions.NoSuchPriceSourceException;
 import tr.edu.metu.ii.AnyChange.product.exceptions.NoSuchProductException;
-import tr.edu.metu.ii.AnyChange.product.models.PricePoint;
-import tr.edu.metu.ii.AnyChange.product.models.PriceSource;
-import tr.edu.metu.ii.AnyChange.product.models.Product;
-import tr.edu.metu.ii.AnyChange.product.models.ProductUrl;
-import tr.edu.metu.ii.AnyChange.product.repositories.PriceSourceRepository;
-import tr.edu.metu.ii.AnyChange.product.repositories.ProductRepository;
-import tr.edu.metu.ii.AnyChange.product.repositories.ProductUrlRepository;
+import tr.edu.metu.ii.AnyChange.product.models.*;
+import tr.edu.metu.ii.AnyChange.product.repositories.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,6 +26,8 @@ public class ProductService {
     final PriceSourceRepository priceSourceRepository;
     final PriceSourceService priceSourceService;
     final ProductUrlRepository productUrlRepository;
+    final PricePointRepository pricePointRepository;
+    final PriceInformationRepository priceInformationRepository;
 
     @PostConstruct
     private void initializeRepo() {
@@ -42,25 +41,51 @@ public class ProductService {
         productUrl.setPriceSource(priceSource);
         productUrlRepository.save(productUrl);
 
+        PricePoint pricePoint = new PricePoint();
+        pricePoint.setPoint(LocalDateTime.now());
+        pricePoint.setPrice(0);
+
+        PriceInformation priceInformation = new PriceInformation();
+        priceInformation.setCurrentPrice(pricePoint);
+        priceInformationRepository.save(priceInformation);
+
+        HashMap<PriceSource, PriceInformation> productPrices = new HashMap<>();
+        productPrices.put(priceSource, priceInformation);
+
         Product product = new Product();
+        product.setProductPrices(productPrices);
         product.setName("Baby Turco Doğadan Bebek Bezi Ekonomik Paket Junior 5 Numara 160 Adet");
         ArrayList<ProductUrl> productUrls = new ArrayList<>();
-        product.setProductUrls(productUrls);
         productUrls.add(productUrl);
+        product.setProductUrls(productUrls);
         productRepository.save(product);
     }
 
     public List<ProductDTO> getMatchingProducts(String keyword) {
-        List<Product> products = productRepository.search(keyword);
+        List<Product> products = productRepository.findByNameContainsIgnoreCase(keyword);
 
         ArrayList<ProductDTO> productDTOS = new ArrayList<>();
         products.forEach(product -> {
             ProductDTO productDTO = new ProductDTO();
             productDTO.setId(product.getId());
+            productDTO.setName(product.getName());
             productDTOS.add(productDTO);
         });
 
         return productDTOS;
+    }
+
+    public ProductDTO getProduct(long productId) throws NoSuchProductException {
+        Optional<Product> productOptional = productRepository.findById(productId);
+        if (productOptional.isEmpty()) {
+            throw new NoSuchProductException("Product with given id does not exists!");
+        }
+        Product product = productOptional.get();
+
+        ProductDTO productDTO = new ProductDTO();
+        productDTO.setId(product.getId());
+        productDTO.setName(product.getName());
+        return productDTO;
     }
 
     public PricePoint getCurrentPrice(ProductDTO productDTO, PriceSourceDTO priceSourceDTO) throws NoSuchPriceSourceException, NoSuchProductException {
@@ -82,16 +107,17 @@ public class ProductService {
         return product.getProductPrices().get(priceSource).getCurrentPrice();
     }
 
-    @Scheduled(fixedRate = 1000)
+    @Scheduled(fixedRate = 10000)
     public void updateCurrentPrices() {
         productRepository.findAll().forEach(product -> {
             product.getProductUrls().forEach(productUrl -> {
                 PricePoint pricePoint = priceSourceService.fetchCurrentPrice(productUrl);
+                product.getProductPrices().get(productUrl.getPriceSource()).setCurrentPrice(pricePoint);
             });
         });
     }
 
-    public List<PriceSource> getAvailablePriceSources(ProductDTO productDTO) throws NoSuchProductException {
+    public List<PriceSourceDTO> getAvailablePriceSources(ProductDTO productDTO) throws NoSuchProductException {
         Optional<Product> productOptional = productRepository.findById(productDTO.getId());
         if (productOptional.isEmpty()) {
             throw new NoSuchProductException("No such product exists!");
@@ -99,8 +125,16 @@ public class ProductService {
 
         Product product = productOptional.get();
 
-        ArrayList<PriceSource> priceSources = new ArrayList<>();
-        product.getProductPrices().forEach(((priceSource, priceInformation) -> priceSources.add(priceSource)));
-        return priceSources;
+        ArrayList<PriceSourceDTO> priceSourceDTOS = new ArrayList<>();
+        product.getProductPrices().forEach(((priceSource, priceInformation) -> {
+            PriceSourceDTO priceSourceDTO = new PriceSourceDTO();
+            priceSourceDTO.setId(priceSource.getId());
+            priceSourceDTO.setName(priceSource.getName());
+            priceSourceDTOS.add(priceSourceDTO);
+        }));
+        return priceSourceDTOS;
     }
 }
+
+
+

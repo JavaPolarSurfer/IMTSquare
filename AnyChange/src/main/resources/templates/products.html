@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+    <title>Products</title>
+</head>
+<body>
+<h1 th:inline="text">Hello <span th:remove="tag" sec:authentication="name">thymeleaf</span>!</h1>
+<form th:action="@{/logout}" method="post">
+    <input type="submit" value="Sign Out"/>
+</form>
+
+<form th:action="@{/products/search}" method="post">
+    <div>
+        <label> Search for products : <input type="text" name="productName"/></label>
+    </div>
+    <div>
+        <input type="submit" value="Search"/>
+    </div>
+</form>
+
+<table  th:if="${matchingProducts}">
+    <thead>
+    <tr>
+        <th> Id </th>
+        <th> Name </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:if="${matchingProducts.empty}">
+        <td colspan="2"> No Books Available </td>
+    </tr>
+    <tr th:each="product : ${matchingProducts}">
+        <td><span th:text="${product.id}"> Id </span></td>
+        <td><a th:href="@{/products/product(productId=${product.id})}"><span th:text="${product.name}"> Name </span></a></td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>

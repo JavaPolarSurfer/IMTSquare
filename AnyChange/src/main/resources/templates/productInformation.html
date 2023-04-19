@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+    <meta charset="UTF-8">
+    <title>Product Information</title>
+</head>
+<body>
+<div>
+    <h1><span th:text="${product.name}"></span></h1>
+</div>
+<table  th:if="${productPrices}">
+    <thead>
+    <tr>
+        <th> Price Source </th>
+        <th> Price </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:if="${productPrices.empty}">
+        <td colspan="2"> No Price Sources Available For This Product </td>
+    </tr>
+    <tr th:each="productPrice : ${productPrices}">
+        <td><span th:text="${productPrice.priceSourceName}"> Price Source </span></td>
+        <td><span th:text="${productPrice.price}"> Price </span></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
