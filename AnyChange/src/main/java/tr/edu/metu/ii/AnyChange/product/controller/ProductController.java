@@ -105,4 +105,22 @@ public class ProductController {
         }
         return "redirect:/products";
     }
+
+    @GetMapping("/removeMonitor")
+    public String removeMonitor(@RequestParam("productId")long productId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null) {
+            String name = authentication.getName();
+            User user = (User)userService.loadUserByUsername(name);
+            try {
+                productService.removeMonitor(user, productId);
+            } catch (NoSuchProductException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        else {
+            throw new RuntimeException("Could not authenticate user!");
+        }
+        return "redirect:/products";
+    }
 }

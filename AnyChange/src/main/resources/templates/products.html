@@ -42,6 +42,7 @@
     <tr>
         <th> Id </th>
         <th> Name </th>
+        <th> Remove From Monitoring List </th>
     </tr>
     </thead>
     <tbody>
@@ -51,6 +52,7 @@
     <tr th:each="product : ${monitoredProducts}">
         <td><span th:text="${product.id}"> Id </span></td>
         <td><a th:href="@{/products/product(productId=${product.id})}"><span th:text="${product.name}"> Name </span></a></td>
+        <td><a th:href="@{/removeMonitor(productId=${product.id})}"><span> X </span></a></td>
     </tr>
     </tbody>
 </table>

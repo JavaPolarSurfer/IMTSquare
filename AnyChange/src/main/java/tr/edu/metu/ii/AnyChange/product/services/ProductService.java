@@ -158,6 +158,16 @@ public class ProductService {
 
         return monitoredProductDTOS;
     }
+
+    public void removeMonitor(User user, long productId) throws NoSuchProductException {
+        Optional<Product> productOptional = productRepository.findById(productId);
+        if (productOptional.isEmpty()) {
+            throw new NoSuchProductException("No such product exists!");
+        }
+
+        Product product = productOptional.get();
+        user.getMonitoredProducts().remove(product);
+    }
 }
 
 
