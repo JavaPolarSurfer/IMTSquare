@@ -1,16 +1,15 @@
 package tr.edu.metu.ii.AnyChange.user.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import tr.edu.metu.ii.AnyChange.product.models.Product;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 @Getter
 @Setter
@@ -28,6 +27,8 @@ public class User implements UserDetails {
     private String lastName;
     private UserRole role;
     private boolean enabled = false;
+    @OneToMany
+    private List<Product> monitoredProducts;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

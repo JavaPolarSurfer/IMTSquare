@@ -9,6 +9,7 @@
 <div>
     <h1><span th:text="${product.name}"></span></h1>
 </div>
+
 <table  th:if="${productPrices}">
     <thead>
     <tr>
@@ -26,5 +27,7 @@
     </tr>
     </tbody>
 </table>
+
+<a th:href="@{/monitorProduct(productId=${product.id})}"><span> Click here to monitor this product. </span></a>
 </body>
 </html>

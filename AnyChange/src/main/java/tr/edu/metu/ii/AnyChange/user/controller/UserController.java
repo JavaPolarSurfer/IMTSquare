@@ -29,11 +29,6 @@ public class UserController {
         return "login";
     }
 
-    @GetMapping("/products")
-    String onProducts() {
-        return "products";
-    }
-
     @GetMapping("/signup")
     String onSignup(Model model) {
         UserDTO userDto = new UserDTO();

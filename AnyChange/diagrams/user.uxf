@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="15.1">
+  <zoom_level>10</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>620</x>
+      <y>460</y>
+      <w>330</w>
+      <h>280</h>
+    </coordinates>
+    <panel_attributes>User
+--
+-id: long
+-password: String
+-email: String
+-firstName: String
+-lastName: String
+-role: UserRole
+-enabled: boolean
+--
+getAuthorities(): Collection&lt;GrantedAuthorities&gt;
+getPassword(): String
+getUsername(): String
+isAccountNonExpired(): boolean
+isAccountNonLocked(): boolean
+isCredentialsNonExpired(): boolean
+isEnabled(): boolean
+style=autoresize</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>440</x>
+      <y>560</y>
+      <w>110</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>/&lt;&lt;enumeration&gt;&gt;/
+UserRole
+--
+USER
+ADMIN
+style=autoresize</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>620</x>
+      <y>230</y>
+      <w>310</w>
+      <h>160</h>
+    </coordinates>
+    <panel_attributes>/UserDetails/
+--
+/getAuthorities(): Collection&lt;GrantedAuthorities&gt;/
+/getPassword(): String/
+/getUsername(): String/
+/isAccountNonExpired(): boolean/
+/isAccountNonLocked(): boolean/
+/isCredentialsNonExpired(): boolean/
+/isEnabled(): boolean/
+style=autoresize</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>540</x>
+      <y>600</y>
+      <w>100</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>lt=-</panel_attributes>
+    <additional_attributes>10.0;10.0;80.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>750</x>
+      <y>380</y>
+      <w>30</w>
+      <h>100</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;80.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1050</x>
+      <y>550</y>
+      <w>210</w>
+      <h>110</h>
+    </coordinates>
+    <panel_attributes>ConfirmationToken
+--
+-id: long
+-token: String
+-createdDate: LocalDateTime
+-user: User
+style=autoresize</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>940</x>
+      <y>600</y>
+      <w>130</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=1
+m2=1</panel_attributes>
+    <additional_attributes>10.0;10.0;110.0;10.0</additional_attributes>
+  </element>
+</diagram>

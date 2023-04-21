@@ -11,6 +11,7 @@ import tr.edu.metu.ii.AnyChange.product.exceptions.NoSuchPriceSourceException;
 import tr.edu.metu.ii.AnyChange.product.exceptions.NoSuchProductException;
 import tr.edu.metu.ii.AnyChange.product.models.*;
 import tr.edu.metu.ii.AnyChange.product.repositories.*;
+import tr.edu.metu.ii.AnyChange.user.models.User;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -133,6 +134,29 @@ public class ProductService {
             priceSourceDTOS.add(priceSourceDTO);
         }));
         return priceSourceDTOS;
+    }
+
+    public void monitorProduct(User user, long productId) throws NoSuchProductException {
+        Optional<Product> productOptional = productRepository.findById(productId);
+        if (productOptional.isEmpty()) {
+            throw new NoSuchProductException("No such product exists!");
+        }
+
+        Product product = productOptional.get();
+        user.getMonitoredProducts().add(product);
+    }
+
+    public List<ProductDTO> getMonitoredProducts(User user) {
+        List<Product> monitoredProducts = user.getMonitoredProducts();
+        ArrayList<ProductDTO> monitoredProductDTOS = new ArrayList<>();
+        monitoredProducts.forEach(product -> {
+            ProductDTO productDTO = new ProductDTO();
+            productDTO.setId(product.getId());
+            productDTO.setName(product.getName());
+            monitoredProductDTOS.add(productDTO);
+        });
+
+        return monitoredProductDTOS;
     }
 }
 

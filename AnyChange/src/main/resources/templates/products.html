@@ -28,9 +28,27 @@
     </thead>
     <tbody>
     <tr th:if="${matchingProducts.empty}">
-        <td colspan="2"> No Books Available </td>
+        <td colspan="2"> No Products Matched </td>
     </tr>
     <tr th:each="product : ${matchingProducts}">
+        <td><span th:text="${product.id}"> Id </span></td>
+        <td><a th:href="@{/products/product(productId=${product.id})}"><span th:text="${product.name}"> Name </span></a></td>
+    </tr>
+    </tbody>
+</table>
+
+<table  th:if="${monitoredProducts}">
+    <thead>
+    <tr>
+        <th> Id </th>
+        <th> Name </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:if="${monitoredProducts.empty}">
+        <td colspan="2"> You Are Not Monitoring Any Products </td>
+    </tr>
+    <tr th:each="product : ${monitoredProducts}">
         <td><span th:text="${product.id}"> Id </span></td>
         <td><a th:href="@{/products/product(productId=${product.id})}"><span th:text="${product.name}"> Name </span></a></td>
     </tr>

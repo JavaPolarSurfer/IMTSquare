@@ -1,6 +1,8 @@
 package tr.edu.metu.ii.AnyChange.product.controller;
 
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,8 +14,9 @@ import tr.edu.metu.ii.AnyChange.product.dto.ProductDTO;
 import tr.edu.metu.ii.AnyChange.product.dto.ProductPricesDTO;
 import tr.edu.metu.ii.AnyChange.product.exceptions.NoSuchPriceSourceException;
 import tr.edu.metu.ii.AnyChange.product.exceptions.NoSuchProductException;
-import tr.edu.metu.ii.AnyChange.product.models.PriceSource;
 import tr.edu.metu.ii.AnyChange.product.services.ProductService;
+import tr.edu.metu.ii.AnyChange.user.models.User;
+import tr.edu.metu.ii.AnyChange.user.services.UserService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,11 +25,38 @@ import java.util.List;
 @AllArgsConstructor
 public class ProductController {
     private ProductService productService;
+    private UserService userService;
+
+    @GetMapping("/products")
+    public String getProducts(Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null) {
+            String name = authentication.getName();
+            User user = (User)userService.loadUserByUsername(name);
+            List<ProductDTO> monitoredProducts = productService.getMonitoredProducts(user);
+            model.addAttribute("monitoredProducts", monitoredProducts);
+        }
+        else {
+            throw new RuntimeException("Could not authenticate user!");
+        }
+        return "products";
+    }
 
     @PostMapping("/products/search")
     public String searchProduct(String productName, Model model) {
         List<ProductDTO> matchingProducts = productService.getMatchingProducts(productName);
         model.addAttribute("matchingProducts", matchingProducts);
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null) {
+            String name = authentication.getName();
+            User user = (User)userService.loadUserByUsername(name);
+            List<ProductDTO> monitoredProducts = productService.getMonitoredProducts(user);
+            model.addAttribute("monitoredProducts", monitoredProducts);
+        }
+        else {
+            throw new RuntimeException("Could not authenticate user!");
+        }
         return "products";
     }
 
@@ -44,9 +74,7 @@ public class ProductController {
                     productPricesDTO.setPriceSourceName(priceSourceDTO.getName());
                     productPricesDTO.setPrice(String.valueOf(productService.getCurrentPrice(productDTO, priceSourceDTO).getPrice()));
                     productPricesDTOS.add(productPricesDTO);
-                } catch (NoSuchPriceSourceException e) {
-                    throw new RuntimeException(e);
-                } catch (NoSuchProductException e) {
+                } catch (NoSuchPriceSourceException | NoSuchProductException e) {
                     throw new RuntimeException(e);
                 }
             });
@@ -58,5 +86,23 @@ public class ProductController {
         } catch (NoSuchProductException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @GetMapping("/monitorProduct")
+    public String monitorProduct(@RequestParam("productId")long productId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null) {
+            String name = authentication.getName();
+            User user = (User)userService.loadUserByUsername(name);
+            try {
+                productService.monitorProduct(user, productId);
+            } catch (NoSuchProductException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        else {
+            throw new RuntimeException("Could not authenticate user!");
+        }
+        return "redirect:/products";
     }
 }
