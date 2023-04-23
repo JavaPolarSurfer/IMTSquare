@@ -4,8 +4,8 @@
   <element>
     <id>UMLGeneric</id>
     <coordinates>
-      <x>370</x>
-      <y>150</y>
+      <x>270</x>
+      <y>120</y>
       <w>120</w>
       <h>40</h>
     </coordinates>
@@ -16,8 +16,8 @@ style=autoresize</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>420</x>
-      <y>180</y>
+      <x>320</x>
+      <y>150</y>
       <w>30</w>
       <h>830</h>
     </coordinates>
@@ -27,8 +27,8 @@ style=autoresize</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>160</x>
-      <y>220</y>
+      <x>60</x>
+      <y>190</y>
       <w>290</w>
       <h>40</h>
     </coordinates>
@@ -39,8 +39,8 @@ GET to /confirm</panel_attributes>
   <element>
     <id>UMLGeneric</id>
     <coordinates>
-      <x>640</x>
-      <y>150</y>
+      <x>540</x>
+      <y>120</y>
       <w>100</w>
       <h>40</h>
     </coordinates>
@@ -51,8 +51,8 @@ style=autoresize</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>680</x>
-      <y>180</y>
+      <x>580</x>
+      <y>150</y>
       <w>30</w>
       <h>820</h>
     </coordinates>
@@ -62,8 +62,8 @@ style=autoresize</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>420</x>
-      <y>260</y>
+      <x>320</x>
+      <y>230</y>
       <w>290</w>
       <h>40</h>
     </coordinates>
@@ -74,8 +74,8 @@ confirmUser(token)</panel_attributes>
   <element>
     <id>UMLGeneric</id>
     <coordinates>
-      <x>1000</x>
-      <y>150</y>
+      <x>900</x>
+      <y>120</y>
       <w>200</w>
       <h>40</h>
     </coordinates>
@@ -86,8 +86,8 @@ style=autoresize</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>680</x>
-      <y>290</y>
+      <x>580</x>
+      <y>260</y>
       <w>440</w>
       <h>40</h>
     </coordinates>
@@ -98,8 +98,8 @@ findConfirmationToken(token)</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1090</x>
-      <y>180</y>
+      <x>990</x>
+      <y>150</y>
       <w>30</w>
       <h>810</h>
     </coordinates>
@@ -109,8 +109,8 @@ findConfirmationToken(token)</panel_attributes>
   <element>
     <id>UMLFrame</id>
     <coordinates>
-      <x>150</x>
-      <y>600</y>
+      <x>50</x>
+      <y>570</y>
       <w>640</w>
       <h>120</h>
     </coordinates>
@@ -127,8 +127,8 @@ halign=left
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>420</x>
-      <y>390</y>
+      <x>320</x>
+      <y>360</y>
       <w>700</w>
       <h>40</h>
     </coordinates>
@@ -139,8 +139,8 @@ InvalidConfirmationTokenException</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>160</x>
-      <y>430</y>
+      <x>60</x>
+      <y>400</y>
       <w>290</w>
       <h>40</h>
     </coordinates>
@@ -151,8 +151,8 @@ redirect to main page</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>680</x>
-      <y>510</y>
+      <x>580</x>
+      <y>480</y>
       <w>440</w>
       <h>40</h>
     </coordinates>
@@ -163,8 +163,8 @@ confirmationToken</panel_attributes>
   <element>
     <id>UMLGeneric</id>
     <coordinates>
-      <x>1250</x>
-      <y>150</y>
+      <x>1150</x>
+      <y>120</y>
       <w>220</w>
       <h>40</h>
     </coordinates>
@@ -175,8 +175,8 @@ style=autoresize</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1350</x>
-      <y>180</y>
+      <x>1250</x>
+      <y>150</y>
       <w>30</w>
       <h>800</h>
     </coordinates>
@@ -186,8 +186,8 @@ style=autoresize</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1090</x>
-      <y>480</y>
+      <x>990</x>
+      <y>450</y>
       <w>290</w>
       <h>40</h>
     </coordinates>
@@ -198,8 +198,8 @@ confirmationToken</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1090</x>
-      <y>310</y>
+      <x>990</x>
+      <y>280</y>
       <w>290</w>
       <h>40</h>
     </coordinates>
@@ -210,8 +210,8 @@ query(token)</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1090</x>
-      <y>360</y>
+      <x>990</x>
+      <y>330</y>
       <w>290</w>
       <h>40</h>
     </coordinates>
@@ -222,8 +222,8 @@ empty object</panel_attributes>
   <element>
     <id>UMLGeneric</id>
     <coordinates>
-      <x>1400</x>
-      <y>590</y>
+      <x>1300</x>
+      <y>560</y>
       <w>260</w>
       <h>40</h>
     </coordinates>
@@ -234,8 +234,8 @@ style=autoresize</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1520</x>
-      <y>620</y>
+      <x>1420</x>
+      <y>590</y>
       <w>30</w>
       <h>360</h>
     </coordinates>
@@ -245,8 +245,8 @@ style=autoresize</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>680</x>
-      <y>540</y>
+      <x>580</x>
+      <y>510</y>
       <w>410</w>
       <h>60</h>
     </coordinates>
@@ -257,8 +257,8 @@ checkIfConfirmationTokenExpired(confirmationToken)</panel_attributes>
   <element>
     <id>UMLFrame</id>
     <coordinates>
-      <x>150</x>
-      <y>360</y>
+      <x>50</x>
+      <y>330</y>
       <w>1300</w>
       <h>120</h>
     </coordinates>
@@ -275,8 +275,8 @@ halign=left
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>420</x>
-      <y>650</y>
+      <x>320</x>
+      <y>620</y>
       <w>290</w>
       <h>40</h>
     </coordinates>
@@ -287,8 +287,8 @@ ExpiredTokenException</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>160</x>
-      <y>680</y>
+      <x>60</x>
+      <y>650</y>
       <w>290</w>
       <h>40</h>
     </coordinates>
@@ -299,8 +299,8 @@ redirect to /expiredToken</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>680</x>
-      <y>710</y>
+      <x>580</x>
+      <y>680</y>
       <w>870</w>
       <h>40</h>
     </coordinates>
@@ -311,8 +311,8 @@ getUser()</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>680</x>
-      <y>750</y>
+      <x>580</x>
+      <y>720</y>
       <w>870</w>
       <h>40</h>
     </coordinates>
@@ -323,8 +323,8 @@ user</panel_attributes>
   <element>
     <id>UMLGeneric</id>
     <coordinates>
-      <x>1740</x>
-      <y>590</y>
+      <x>1640</x>
+      <y>560</y>
       <w>80</w>
       <h>40</h>
     </coordinates>
@@ -335,8 +335,8 @@ style=autoresize</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1770</x>
-      <y>620</y>
+      <x>1670</x>
+      <y>590</y>
       <w>30</w>
       <h>360</h>
     </coordinates>
@@ -346,8 +346,8 @@ style=autoresize</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>680</x>
-      <y>780</y>
+      <x>580</x>
+      <y>750</y>
       <w>1120</w>
       <h>40</h>
     </coordinates>
@@ -358,8 +358,8 @@ setEnabled(true)</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>680</x>
-      <y>820</y>
+      <x>580</x>
+      <y>790</y>
       <w>440</w>
       <h>40</h>
     </coordinates>
@@ -370,8 +370,8 @@ deleteConfirmationToken(confirmationToken)</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1090</x>
-      <y>850</y>
+      <x>990</x>
+      <y>820</y>
       <w>290</w>
       <h>40</h>
     </coordinates>
@@ -382,8 +382,8 @@ delete(confirmationToken)</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>420</x>
-      <y>870</y>
+      <x>320</x>
+      <y>840</y>
       <w>290</w>
       <h>40</h>
     </coordinates>
@@ -394,8 +394,8 @@ delete(confirmationToken)</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>160</x>
-      <y>920</y>
+      <x>60</x>
+      <y>890</y>
       <w>290</w>
       <h>50</h>
     </coordinates>
@@ -407,8 +407,8 @@ redirect to /login</panel_attributes>
   <element>
     <id>UMLGeneric</id>
     <coordinates>
-      <x>420</x>
-      <y>240</y>
+      <x>320</x>
+      <y>210</y>
       <w>20</w>
       <h>90</h>
     </coordinates>
@@ -418,8 +418,8 @@ redirect to /login</panel_attributes>
   <element>
     <id>UMLGeneric</id>
     <coordinates>
-      <x>680</x>
-      <y>280</y>
+      <x>580</x>
+      <y>250</y>
       <w>20</w>
       <h>610</h>
     </coordinates>
@@ -429,8 +429,8 @@ redirect to /login</panel_attributes>
   <element>
     <id>UMLGeneric</id>
     <coordinates>
-      <x>1090</x>
-      <y>310</y>
+      <x>990</x>
+      <y>280</y>
       <w>20</w>
       <h>220</h>
     </coordinates>
@@ -440,8 +440,8 @@ redirect to /login</panel_attributes>
   <element>
     <id>UMLGeneric</id>
     <coordinates>
-      <x>420</x>
-      <y>380</y>
+      <x>320</x>
+      <y>350</y>
       <w>20</w>
       <h>90</h>
     </coordinates>
@@ -451,8 +451,8 @@ redirect to /login</panel_attributes>
   <element>
     <id>UMLGeneric</id>
     <coordinates>
-      <x>1090</x>
-      <y>810</y>
+      <x>990</x>
+      <y>780</y>
       <w>20</w>
       <h>100</h>
     </coordinates>
@@ -462,8 +462,8 @@ redirect to /login</panel_attributes>
   <element>
     <id>UMLGeneric</id>
     <coordinates>
-      <x>420</x>
-      <y>620</y>
+      <x>320</x>
+      <y>590</y>
       <w>20</w>
       <h>90</h>
     </coordinates>
@@ -473,8 +473,8 @@ redirect to /login</panel_attributes>
   <element>
     <id>UMLGeneric</id>
     <coordinates>
-      <x>420</x>
-      <y>870</y>
+      <x>320</x>
+      <y>840</y>
       <w>20</w>
       <h>70</h>
     </coordinates>
@@ -484,8 +484,8 @@ redirect to /login</panel_attributes>
   <element>
     <id>UMLGeneric</id>
     <coordinates>
-      <x>1350</x>
-      <y>330</y>
+      <x>1250</x>
+      <y>300</y>
       <w>20</w>
       <h>170</h>
     </coordinates>
@@ -495,8 +495,8 @@ redirect to /login</panel_attributes>
   <element>
     <id>UMLGeneric</id>
     <coordinates>
-      <x>1520</x>
-      <y>730</y>
+      <x>1420</x>
+      <y>700</y>
       <w>20</w>
       <h>40</h>
     </coordinates>
