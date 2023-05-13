@@ -41,7 +41,7 @@ public class WebSecurityConfig {
         user.setFirstName("admin");
         user.setLastName("admin");
         user.setPassword(passwordEncoder.encode("123123123."));
-        user.setRole(UserRole.USER);
+        user.setRole(UserRole.SELLER);
         user.setEnabled(true);
         userService.createUser(user);
         auth.userDetailsService(userService).passwordEncoder(passwordEncoder);

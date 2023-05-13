@@ -3,6 +3,8 @@ package tr.edu.metu.ii.AnyChange.product.services;
 import jakarta.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tr.edu.metu.ii.AnyChange.product.dto.PriceSourceDTO;
@@ -12,12 +14,13 @@ import tr.edu.metu.ii.AnyChange.product.exceptions.NoSuchProductException;
 import tr.edu.metu.ii.AnyChange.product.models.*;
 import tr.edu.metu.ii.AnyChange.product.repositories.*;
 import tr.edu.metu.ii.AnyChange.user.models.User;
+import tr.edu.metu.ii.AnyChange.user.services.UserService;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 @Service
 @AllArgsConstructor
@@ -29,37 +32,19 @@ public class ProductService {
     final ProductUrlRepository productUrlRepository;
     final PricePointRepository pricePointRepository;
     final PriceInformationRepository priceInformationRepository;
+    private UserService userService;
 
     @PostConstruct
     private void initializeRepo() {
-        PriceSource priceSource = new PriceSource();
-        priceSource.setName("trendyol");
-        priceSource.setScript("trendyol");
-        priceSourceRepository.save(priceSource);
+        PriceSource trendyolSource = new PriceSource();
+        trendyolSource.setName("trendyol");
+        trendyolSource.setScript("trendyol");
+        priceSourceRepository.save(trendyolSource);
 
-        ProductUrl productUrl = new ProductUrl();
-        productUrl.setUrl("https://www.trendyol.com/baby-turco/dogadan-bebek-bezi-ekonomik-paket-junior-5-numara-160-adet-p-176119387?boutiqueId=61&merchantId=386464");
-        productUrl.setPriceSource(priceSource);
-        productUrlRepository.save(productUrl);
-
-        PricePoint pricePoint = new PricePoint();
-        pricePoint.setPoint(LocalDateTime.now());
-        pricePoint.setPrice(0);
-
-        PriceInformation priceInformation = new PriceInformation();
-        priceInformation.setCurrentPrice(pricePoint);
-        priceInformationRepository.save(priceInformation);
-
-        HashMap<PriceSource, PriceInformation> productPrices = new HashMap<>();
-        productPrices.put(priceSource, priceInformation);
-
-        Product product = new Product();
-        product.setProductPrices(productPrices);
-        product.setName("Baby Turco Doğadan Bebek Bezi Ekonomik Paket Junior 5 Numara 160 Adet");
-        ArrayList<ProductUrl> productUrls = new ArrayList<>();
-        productUrls.add(productUrl);
-        product.setProductUrls(productUrls);
-        productRepository.save(product);
+        PriceSource hcSource = new PriceSource();
+        hcSource.setName("hc");
+        hcSource.setScript("hc");
+        priceSourceRepository.save(hcSource);
     }
 
     public List<ProductDTO> getMatchingProducts(String keyword) {
@@ -167,6 +152,97 @@ public class ProductService {
 
         Product product = productOptional.get();
         user.getMonitoredProducts().remove(product);
+    }
+
+    public void addNewProduct(ProductDTO productDTO) throws NoSuchPriceSourceException, MalformedURLException {
+        Optional<Product> productOptional = productRepository.findById(productDTO.getId());
+        if (productOptional.isPresent()) {
+            Product product = productOptional.get();
+            AtomicBoolean isSupported = new AtomicBoolean(false);
+            priceSourceRepository.findAll().forEach(priceSource -> {
+                if (productDTO.getProductURL().contains(priceSource.getName())) {
+                    isSupported.set(true);
+                    ProductUrl productUrl = new ProductUrl();
+                    productUrl.setUrl(productDTO.getProductURL());
+                    productUrl.setPriceSource(priceSource);
+                    productUrlRepository.save(productUrl);
+
+                    PricePoint pricePoint = new PricePoint();
+                    pricePoint.setPoint(LocalDateTime.now());
+                    pricePoint.setPrice(0);
+
+                    PriceInformation priceInformation = new PriceInformation();
+                    priceInformation.setCurrentPrice(pricePoint);
+                    priceInformationRepository.save(priceInformation);
+
+                    product.getProductPrices().put(priceSource, priceInformation);
+                    product.getProductUrls().add(productUrl);
+                }
+            });
+            if (!isSupported.get()) {
+                throw new NoSuchPriceSourceException("This product URL is not supported by any price sources available!");
+            }
+        }
+        else {
+            AtomicBoolean isSupported = new AtomicBoolean(false);
+            URL url = new URL(productDTO.getProductURL());
+            priceSourceRepository.findAll().forEach(priceSource -> {
+                if (url.getHost().contains(priceSource.getName())) {
+                    isSupported.set(true);
+                    ProductUrl productUrl = new ProductUrl();
+                    productUrl.setUrl(productDTO.getProductURL());
+                    productUrl.setPriceSource(priceSource);
+                    productUrlRepository.save(productUrl);
+
+                    PricePoint pricePoint = new PricePoint();
+                    pricePoint.setPoint(LocalDateTime.now());
+                    pricePoint.setPrice(0);
+
+                    PriceInformation priceInformation = new PriceInformation();
+                    priceInformation.setCurrentPrice(pricePoint);
+                    priceInformationRepository.save(priceInformation);
+
+                    HashMap<PriceSource, PriceInformation> productPrices = new HashMap<>();
+                    productPrices.put(priceSource, priceInformation);
+
+                    Product product = new Product();
+                    product.setProductPrices(productPrices);
+                    product.setName(productDTO.getName());
+                    ArrayList<ProductUrl> productUrls = new ArrayList<>();
+                    productUrls.add(productUrl);
+                    product.setProductUrls(productUrls);
+                    productRepository.save(product);
+
+                    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+                    if (authentication != null) {
+                        String name = authentication.getName();
+                        User user = (User) userService.loadUserByUsername(name);
+                        try {
+                            monitorProduct(user, product.getId());
+                        } catch (NoSuchProductException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                }
+            });
+            if (!isSupported.get()) {
+                throw new NoSuchPriceSourceException("This product URL is not supported by any price sources available!");
+            }
+        }
+    }
+
+    public void removeProduct(long productId) throws NoSuchProductException {
+        Optional<Product> productOptional = productRepository.findById(productId);
+        if (productOptional.isPresent()) {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            if (authentication != null) {
+                String name = authentication.getName();
+                User user = (User) userService.loadUserByUsername(name);
+                removeMonitor(user, productId);
+            }
+
+            productRepository.delete(productOptional.get());
+        }
     }
 }
 

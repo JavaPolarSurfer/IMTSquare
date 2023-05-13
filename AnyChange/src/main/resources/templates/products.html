@@ -14,6 +14,8 @@
 <p>Click <a th:href="@{/managePaymentInformation}">here</a> to manage your payment information.</p>
 <p>Click <a th:href="@{/manageAccountType}">here</a> to manage your account information.</p>
 
+<p th:if="${isSeller}">Click <a th:href="@{/addNewProduct}">here</a> to add new product.</p>
+
 
 <form th:action="@{/products/search}" method="post">
     <div>
@@ -48,6 +50,7 @@
         <th> Id </th>
         <th> Name </th>
         <th> Remove From Monitoring List </th>
+        <th th:if="${isSeller}"> Update Product Information </th>
     </tr>
     </thead>
     <tbody>
@@ -58,6 +61,7 @@
         <td><span th:text="${product.id}"> Id </span></td>
         <td><a th:href="@{/products/product(productId=${product.id})}"><span th:text="${product.name}"> Name </span></a></td>
         <td><a th:href="@{/removeMonitor(productId=${product.id})}"><span> X </span></a></td>
+        <td><a th:href="@{/updateProduct(productId=${product.id})}"><span> Click Here </span></a></td>
     </tr>
     </tbody>
 </table>

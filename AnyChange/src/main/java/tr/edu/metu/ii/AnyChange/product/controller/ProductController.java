@@ -6,6 +6,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
@@ -15,9 +16,12 @@ import tr.edu.metu.ii.AnyChange.product.dto.ProductPricesDTO;
 import tr.edu.metu.ii.AnyChange.product.exceptions.NoSuchPriceSourceException;
 import tr.edu.metu.ii.AnyChange.product.exceptions.NoSuchProductException;
 import tr.edu.metu.ii.AnyChange.product.services.ProductService;
+import tr.edu.metu.ii.AnyChange.user.dto.PaymentInformationDTO;
 import tr.edu.metu.ii.AnyChange.user.models.User;
+import tr.edu.metu.ii.AnyChange.user.models.UserRole;
 import tr.edu.metu.ii.AnyChange.user.services.UserService;
 
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,6 +39,9 @@ public class ProductController {
             User user = (User)userService.loadUserByUsername(name);
             List<ProductDTO> monitoredProducts = productService.getMonitoredProducts(user);
             model.addAttribute("monitoredProducts", monitoredProducts);
+            if (user.getRole() == UserRole.SELLER) {
+                model.addAttribute("isSeller", true);
+            }
         }
         else {
             throw new RuntimeException("Could not authenticate user!");
@@ -53,6 +60,9 @@ public class ProductController {
             User user = (User)userService.loadUserByUsername(name);
             List<ProductDTO> monitoredProducts = productService.getMonitoredProducts(user);
             model.addAttribute("monitoredProducts", monitoredProducts);
+            if (user.getRole() == UserRole.SELLER) {
+                model.addAttribute("isSeller", true);
+            }
         }
         else {
             throw new RuntimeException("Could not authenticate user!");
@@ -121,6 +131,43 @@ public class ProductController {
         else {
             throw new RuntimeException("Could not authenticate user!");
         }
+        return "redirect:/products";
+    }
+
+    @GetMapping("/addNewProduct")
+    public String addNewProduct(Model model) {
+        ProductDTO productDTO = new ProductDTO();
+        model.addAttribute("productInformation", productDTO);
+        return "addNewProduct";
+    }
+
+    @PostMapping("/addNewProduct")
+    public String addNewProduct(@ModelAttribute("productInformation") ProductDTO productDTO, Model model) {
+        try {
+            productService.addNewProduct(productDTO);
+        } catch (NoSuchPriceSourceException e) {
+            model.addAttribute("errorUnsupportedPriceSource", "This product source is not supported!");
+            return addNewProduct(model);
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
+        }
+        return "redirect:/products";
+    }
+
+    @GetMapping("/updateProduct")
+    public String updateProduct(@RequestParam("productId")long productId, Model model) {
+        try {
+            ProductDTO productDTO = productService.getProduct(productId);
+            model.addAttribute("productInformation", productDTO);
+            return "addNewProduct";
+        } catch (NoSuchProductException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @GetMapping("/removeProduct")
+    public String removeProduct(@RequestParam("productId")long productId, Model model) throws NoSuchProductException {
+        productService.removeProduct(productId);
         return "redirect:/products";
     }
 }

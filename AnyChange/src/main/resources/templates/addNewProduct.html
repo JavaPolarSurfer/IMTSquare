@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <title>Spring Security Example </title>
+</head>
+<body>
+<form th:action="@{/addNewProduct}" method="post" th:object="${productInformation}">
+    <div>
+        <label> Product ID : <input type="text" name="id" th:field="*{id}" readonly="readonly"/></label>
+    </div>
+    <div>
+        <label> Product Name : <input type="text" name="name" th:field="*{name}"/></label>
+    </div>
+    <div>
+        <label> Product URL : <input type="text" name="productURL" th:field="*{productURL}"/></label>
+        <span  style="color:red" th:if="${errorUnsupportedPriceSource}"  th:text="${errorUnsupportedPriceSource}">Error</span>
+    </div>
+    <div>
+        <input type="submit" value="Add Product"/>
+    </div>
+</form>
+<p>Click <a th:href="@{/removeProduct(productId=${productInformation.id})}">here</a> to remove this product.</p>
+</body>
+</html>
