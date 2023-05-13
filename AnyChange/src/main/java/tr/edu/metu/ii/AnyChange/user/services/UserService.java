@@ -2,11 +2,14 @@ package tr.edu.metu.ii.AnyChange.user.services;
 
 import lombok.AllArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import tr.edu.metu.ii.AnyChange.product.dto.ProductDTO;
 import tr.edu.metu.ii.AnyChange.user.dto.UserDTO;
 import tr.edu.metu.ii.AnyChange.user.exceptions.*;
 import tr.edu.metu.ii.AnyChange.user.models.ConfirmationToken;
@@ -16,6 +19,7 @@ import tr.edu.metu.ii.AnyChange.user.repositories.UserRepository;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -154,5 +158,66 @@ public class UserService implements UserDetailsService {
         User user = confirmationToken.getUser();
         user.setPassword(passwordEncoder.encode(password));
         confirmationTokenService.deleteConfirmationToken(confirmationToken);
+    }
+
+    public void updateCredentials(UserDTO userDto) throws FirstNameEmptyException, LastNameEmptyException, InvalidPhoneNumberException {
+        if (userDto.getFirstName().isEmpty()) {
+            throw new FirstNameEmptyException("First name cannot be empty!");
+        }
+        if (userDto.getLastName().isEmpty()) {
+            throw new LastNameEmptyException("Last name cannot be empty!");
+        }
+        validatePhoneNumber(userDto.getPhoneNumber());
+
+        Optional<User> optionalUser = userRepository.findByEmail(userDto.getEmail());
+        if (optionalUser.isEmpty()) {
+            throw new UsernameNotFoundException("Email not found!");
+        }
+
+        User user = optionalUser.get();
+        user.setFirstName(userDto.getFirstName());
+        user.setLastName(userDto.getLastName());
+        user.setAddress(userDto.getAddress());
+        user.setPhoneNumber(userDto.getPhoneNumber());
+    }
+
+    private void validatePhoneNumber(String phoneNumber) throws InvalidPhoneNumberException {
+        if (phoneNumber.isEmpty()) {
+            return;
+        }
+        Pattern regex = Pattern.compile("^(\\+\\d{1,2}\\s?)?\\(?\\d{3}\\)?[\\s.-]?\\d{3}[\\s.-]?\\d{4}$");
+        Matcher matcher = regex.matcher(phoneNumber);
+        if (!matcher.find()) {
+            throw new InvalidPhoneNumberException("Phone number is not valid!");
+        }
+    }
+
+    public UserDTO getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null) {
+            String name = authentication.getName();
+            User user = (User)loadUserByUsername(name);
+
+            UserDTO userDTO = new UserDTO();
+            userDTO.setFirstName(user.getFirstName());
+            userDTO.setLastName(user.getLastName());
+            userDTO.setPassword(user.getPassword());
+            userDTO.setAddress(user.getAddress());
+            userDTO.setEmail(user.getEmail());
+            userDTO.setPhoneNumber(user.getPhoneNumber());
+            return userDTO;
+        }
+        throw new RuntimeException("Could not access authentication!");
+    }
+
+    public void updatePassword(UserDTO userDTO) throws PasswordTooShortException, PasswordSpecialCharactersException, PasswordEmptyException, PasswordNotMatchingException {
+        validatePassword(userDTO.getPassword(), userDTO.getMatchingPassword());
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null) {
+            String name = authentication.getName();
+            User user = (User) loadUserByUsername(name);
+            user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+        }
     }
 }

@@ -138,4 +138,52 @@ public class UserController {
         }
         return "login";
     }
+
+    @GetMapping("/managePersonalInformation")
+    String managePersonalInformation(Model model) {
+        UserDTO userDto = userService.getCurrentUser();
+        model.addAttribute("user", userDto);
+        return "managePersonalInformation";
+    }
+
+    @PostMapping("/updateCredentials")
+    String updateCredentials(@ModelAttribute("user") UserDTO userDto, Model model) {
+        model.addAttribute("user", userDto);
+        try {
+            userService.updateCredentials(userDto);
+        } catch (FirstNameEmptyException e) {
+            model.addAttribute("errorFirstNameEmpty", "First name cannot be empty!");
+            return "managePersonalInformation";
+        } catch (LastNameEmptyException e) {
+            model.addAttribute("errorLastNameEmpty", "Last name cannot be empty!");
+            return "managePersonalInformation";
+        } catch (InvalidPhoneNumberException e) {
+            model.addAttribute("errorInvalidPhoneNumber", "Phone number is not valid!");
+            return "managePersonalInformation";
+        }
+        return "managePersonalInformation";
+    }
+
+    @PostMapping("/updatePassword")
+    String updatePassword(@ModelAttribute("user") UserDTO userDTO, Model model) {
+        model.addAttribute("user", userDTO);
+        try {
+            userService.updatePassword(userDTO);
+        } catch (PasswordEmptyException e) {
+            model.addAttribute("errorPasswordEmpty", "Password cannot be empty!");
+            return "managePersonalInformation";
+        } catch (PasswordTooShortException e) {
+            model.addAttribute("errorShortPassword",
+                    "Password is too short, it should be at least 8 characters long!");
+            return "managePersonalInformation";
+        } catch (PasswordNotMatchingException e) {
+            model.addAttribute("errorNonMatchingPasswords", "Passwords do not match!");
+            return "managePersonalInformation";
+        } catch (PasswordSpecialCharactersException e) {
+            model.addAttribute("errorPasswordSpecialCharacters",
+                    "Password must include at least one special character!");
+            return "managePersonalInformation";
+        }
+        return "managePersonalInformation";
+    }
 }

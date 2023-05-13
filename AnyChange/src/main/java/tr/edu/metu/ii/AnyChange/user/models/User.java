@@ -29,6 +29,8 @@ public class User implements UserDetails {
     private boolean enabled = false;
     @OneToMany
     private List<Product> monitoredProducts;
+    private String address;
+    private String phoneNumber;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
