@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import tr.edu.metu.ii.AnyChange.user.dto.PaymentInformationDTO;
 import tr.edu.metu.ii.AnyChange.user.dto.UserDTO;
 import tr.edu.metu.ii.AnyChange.user.exceptions.*;
+import tr.edu.metu.ii.AnyChange.user.models.AccountType;
 import tr.edu.metu.ii.AnyChange.user.models.ConfirmationToken;
 import tr.edu.metu.ii.AnyChange.user.services.ConfirmationTokenService;
 import tr.edu.metu.ii.AnyChange.user.services.UserService;
@@ -229,5 +230,37 @@ public class UserController {
     String deletePaymentInformation(@RequestParam("id") String id, Model model) {
         userService.deletePaymentInformation(id);
         return managePaymentInformation(model);
+    }
+
+    @GetMapping("/manageAccountType")
+    String manageAccountType(Model model) {
+        UserDTO userDTO = userService.getCurrentUser();
+        if (userDTO.getAccountType() == AccountType.STANDART) {
+            model.addAttribute("isStandartAccount", true);
+            List<PaymentInformationDTO> paymentInformationDTOList = userService.getPaymentOptionsForCurrentUser();
+            model.addAttribute("matchingPaymentInformation", paymentInformationDTOList);
+        }
+        else {
+            model.addAttribute("isPremiumAccount", true);
+        }
+        return "manageAccountType";
+    }
+
+    @GetMapping("/upgradeToPremium")
+    String upgradeToPremium(@RequestParam("id") String id, Model model) {
+        userService.upgradeCurrentUserToPremium(id);
+        return manageAccountType(model);
+    }
+
+    @GetMapping("/cancelPremium")
+    String cancelPremium(Model model) {
+        userService.cancelPremiumForCurrentUser();
+        return manageAccountType(model);
+    }
+
+    @GetMapping("/removeAccount")
+    String removeAccount(Model model) {
+        userService.removeCurrentAccount();
+        return "home";
     }
 }

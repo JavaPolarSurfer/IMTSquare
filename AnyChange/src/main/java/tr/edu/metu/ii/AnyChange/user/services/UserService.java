@@ -10,14 +10,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import tr.edu.metu.ii.AnyChange.product.dto.ProductDTO;
 import tr.edu.metu.ii.AnyChange.user.dto.PaymentInformationDTO;
 import tr.edu.metu.ii.AnyChange.user.dto.UserDTO;
 import tr.edu.metu.ii.AnyChange.user.exceptions.*;
-import tr.edu.metu.ii.AnyChange.user.models.ConfirmationToken;
-import tr.edu.metu.ii.AnyChange.user.models.PaymentInformation;
-import tr.edu.metu.ii.AnyChange.user.models.User;
-import tr.edu.metu.ii.AnyChange.user.models.UserRole;
+import tr.edu.metu.ii.AnyChange.user.models.*;
 import tr.edu.metu.ii.AnyChange.user.repositories.PaymentInformationRepository;
 import tr.edu.metu.ii.AnyChange.user.repositories.UserRepository;
 
@@ -212,6 +208,7 @@ public class UserService implements UserDetailsService {
             userDTO.setAddress(user.getAddress());
             userDTO.setEmail(user.getEmail());
             userDTO.setPhoneNumber(user.getPhoneNumber());
+            userDTO.setAccountType(user.getType());
             return userDTO;
         }
         throw new RuntimeException("Could not access authentication!");
@@ -305,6 +302,35 @@ public class UserService implements UserDetailsService {
                 user.getPaymentInformations().remove(paymentInformation);
                 paymentInformationRepository.delete(paymentInformation);
             }
+        }
+    }
+
+    public void upgradeCurrentUserToPremium(String id) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null) {
+            String name = authentication.getName();
+            User user = (User) loadUserByUsername(name);
+            user.setType(AccountType.PREMIUM);
+        }
+    }
+
+    public void cancelPremiumForCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null) {
+            String name = authentication.getName();
+            User user = (User) loadUserByUsername(name);
+            user.setType(AccountType.STANDART);
+        }
+    }
+
+    public void removeCurrentAccount() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        SecurityContextHolder.clearContext();
+        if (authentication != null) {
+            String name = authentication.getName();
+            User user = (User) loadUserByUsername(name);
+            user.getPaymentInformations().forEach(paymentInformationRepository::delete);
+            userRepository.delete(user);
         }
     }
 }

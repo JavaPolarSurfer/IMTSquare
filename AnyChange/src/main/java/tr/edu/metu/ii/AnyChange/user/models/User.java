@@ -27,6 +27,7 @@ public class User implements UserDetails {
     private String lastName;
     private UserRole role;
     private boolean enabled = false;
+    private AccountType type = AccountType.STANDART;
     @OneToMany
     private List<Product> monitoredProducts;
     private String address;
