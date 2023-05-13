@@ -210,13 +210,18 @@ public class UserService implements UserDetailsService {
         throw new RuntimeException("Could not access authentication!");
     }
 
-    public void updatePassword(UserDTO userDTO) throws PasswordTooShortException, PasswordSpecialCharactersException, PasswordEmptyException, PasswordNotMatchingException {
+    public void updatePassword(UserDTO userDTO) throws PasswordTooShortException, PasswordSpecialCharactersException, PasswordEmptyException, PasswordNotMatchingException, PasswordCantBeSameException {
         validatePassword(userDTO.getPassword(), userDTO.getMatchingPassword());
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null) {
             String name = authentication.getName();
             User user = (User) loadUserByUsername(name);
+
+            if (user.getPassword().equals(passwordEncoder.encode(userDTO.getPassword()))) {
+                throw new PasswordCantBeSameException("Password can't be same as old password!");
+            }
+
             user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         }
     }

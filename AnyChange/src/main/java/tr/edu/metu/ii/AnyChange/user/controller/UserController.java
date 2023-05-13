@@ -183,6 +183,10 @@ public class UserController {
             model.addAttribute("errorPasswordSpecialCharacters",
                     "Password must include at least one special character!");
             return "managePersonalInformation";
+        } catch (PasswordCantBeSameException e) {
+            model.addAttribute("errorNewPasswordSamePassword",
+                    "Password cannot be same as old one!");
+            return "managePersonalInformation";
         }
         return "managePersonalInformation";
     }
