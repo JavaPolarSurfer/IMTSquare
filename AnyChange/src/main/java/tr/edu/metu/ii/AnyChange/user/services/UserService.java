@@ -9,16 +9,21 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import tr.edu.metu.ii.AnyChange.product.dto.ProductDTO;
+import tr.edu.metu.ii.AnyChange.user.dto.PaymentInformationDTO;
 import tr.edu.metu.ii.AnyChange.user.dto.UserDTO;
 import tr.edu.metu.ii.AnyChange.user.exceptions.*;
 import tr.edu.metu.ii.AnyChange.user.models.ConfirmationToken;
+import tr.edu.metu.ii.AnyChange.user.models.PaymentInformation;
 import tr.edu.metu.ii.AnyChange.user.models.User;
 import tr.edu.metu.ii.AnyChange.user.models.UserRole;
+import tr.edu.metu.ii.AnyChange.user.repositories.PaymentInformationRepository;
 import tr.edu.metu.ii.AnyChange.user.repositories.UserRepository;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -26,11 +31,13 @@ import java.util.regex.Pattern;
 
 @Service
 @AllArgsConstructor
+@Transactional
 public class UserService implements UserDetailsService {
     final private UserRepository userRepository;
     final private BCryptPasswordEncoder passwordEncoder;
     final private ConfirmationTokenService confirmationTokenService;
     final private ConfirmationEmailSenderService confirmationEmailSenderService;
+    final private PaymentInformationRepository paymentInformationRepository;
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<User> optionalUser = userRepository.findByEmail(username);
@@ -223,6 +230,81 @@ public class UserService implements UserDetailsService {
             }
 
             user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+        }
+    }
+
+    public void addPaymentInformation(PaymentInformationDTO paymentInformationDTO) throws InvalidCreditCardNumberException, InvalidExpirationDateException, InvalidSecurityNumberException {
+        validateCreditCardInformation(paymentInformationDTO);
+
+        PaymentInformation paymentInformation = new PaymentInformation();
+        paymentInformation.setExpirationMonth(paymentInformationDTO.getExpirationMonth());
+        paymentInformation.setExpirationYear(paymentInformationDTO.getExpirationYear());
+        paymentInformation.setSecurityCode(paymentInformationDTO.getSecurityCode());
+        paymentInformation.setCreditCardNumber(paymentInformationDTO.getCreditCardNumber());
+        paymentInformationRepository.save(paymentInformation);
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null) {
+            String name = authentication.getName();
+            User user = (User) loadUserByUsername(name);
+            user.getPaymentInformations().add(paymentInformation);
+        }
+    }
+
+    private void validateCreditCardInformation(PaymentInformationDTO paymentInformationDTO) throws InvalidCreditCardNumberException, InvalidSecurityNumberException, InvalidExpirationDateException {
+        String creditCardNumber = paymentInformationDTO.getCreditCardNumber();
+        creditCardNumber = creditCardNumber.replace(" ", "");
+        creditCardNumber = creditCardNumber.replace("-", "");
+        if (!creditCardNumber.matches("[0-9]+") || creditCardNumber.length() != 16) {
+            throw new InvalidCreditCardNumberException("Credit card number is invalid!");
+        }
+
+        String securityCode = paymentInformationDTO.getSecurityCode();
+        if (!securityCode.matches("[0-9]+") || securityCode.length() != 3) {
+            throw new InvalidSecurityNumberException("Credit card security number is invalid!");
+        }
+
+        String expirationMonth = paymentInformationDTO.getExpirationMonth();
+        String expirationYear = paymentInformationDTO.getExpirationYear();
+
+        if (!expirationMonth.matches("[0-9]+") || Long.parseLong(expirationMonth) > 12 || Long.parseLong(expirationMonth) < 0) {
+            throw new InvalidExpirationDateException("Credit card security number is invalid!");
+        }
+        if (!expirationYear.matches("[0-9]+") || expirationYear.length() > 2 || Long.parseLong(expirationYear) < 0) {
+            throw new InvalidExpirationDateException("Credit card security number is invalid!");
+        }
+    }
+
+    public List<PaymentInformationDTO> getPaymentOptionsForCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        List<PaymentInformationDTO> paymentInformationDTOList = new ArrayList<>();
+        if (authentication != null) {
+            String name = authentication.getName();
+            User user = (User) loadUserByUsername(name);
+            user.getPaymentInformations().forEach(paymentInformation -> {
+                PaymentInformationDTO paymentInformationDTO = new PaymentInformationDTO();
+                paymentInformationDTO.setCreditCardNumber(paymentInformation.getCreditCardNumber());
+                paymentInformationDTO.setExpirationYear(paymentInformation.getExpirationYear());
+                paymentInformationDTO.setExpirationMonth(paymentInformation.getExpirationMonth());
+                paymentInformationDTO.setSecurityCode(paymentInformation.getSecurityCode());
+                paymentInformationDTO.setId(paymentInformation.getId());
+                paymentInformationDTOList.add(paymentInformationDTO);
+            });
+        }
+        return paymentInformationDTOList;
+    }
+
+    public void deletePaymentInformation(String id) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null) {
+            String name = authentication.getName();
+            User user = (User) loadUserByUsername(name);
+            Optional<PaymentInformation> paymentInformationOptional = paymentInformationRepository.findById(Long.valueOf(id));
+            if (paymentInformationOptional.isPresent()) {
+                PaymentInformation paymentInformation = paymentInformationOptional.get();
+                user.getPaymentInformations().remove(paymentInformation);
+                paymentInformationRepository.delete(paymentInformation);
+            }
         }
     }
 }

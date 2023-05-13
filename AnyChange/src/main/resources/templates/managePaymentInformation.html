@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <title>Spring Security Example </title>
+</head>
+<body>
+<form th:action="@{/addPaymentInformation}" method="post" th:object="${paymentInformation}">
+    <div>
+        <label> Credit Card Number : <input type="text" name="creditCardNumber" th:field="*{creditCardNumber}"/></label>
+        <span  style="color:red" th:if="${errorInvalidCardNumber}"  th:text="${errorInvalidCardNumber}">Error</span>
+    </div>
+    <div>
+        <label> Security Code : <input type="text" name="securityCode" th:field="*{securityCode}"/></label>
+        <span  style="color:red" th:if="${errorInvalidSecurityCode}"  th:text="${errorInvalidSecurityCode}">Error</span>
+    </div>
+    <div>
+        <label> Expiration Date : <input type="number" name="expirationMonth" th:field="*{expirationMonth}"/>
+                                  <input type="number" name="expirationYear" th:field="*{expirationYear}"/></label>
+        <span  style="color:red" th:if="${errorInvalidExpirationDate}"  th:text="${errorInvalidExpirationDate}">Error</span>
+    </div>
+    <div>
+        <input type="submit" value="Add Payment Information"/>
+    </div>
+</form>
+
+<table  th:if="${matchingPaymentInformation}">
+    <thead>
+    <tr>
+        <th> Credit Card Number </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:if="${matchingPaymentInformation.empty}">
+        <td colspan="2"> No Credit Cards Matched </td>
+    </tr>
+    <tr th:each="paymentInformation : ${matchingPaymentInformation}">
+        <td><span th:text="${paymentInformation.creditCardNumber}"> Credit Card Number </span></td>
+        <td><a th:href="@{/deletePaymentInformation(id=${paymentInformation.id})}"> Delete </span></a></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

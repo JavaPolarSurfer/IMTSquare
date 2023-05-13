@@ -8,11 +8,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import tr.edu.metu.ii.AnyChange.user.dto.PaymentInformationDTO;
 import tr.edu.metu.ii.AnyChange.user.dto.UserDTO;
 import tr.edu.metu.ii.AnyChange.user.exceptions.*;
 import tr.edu.metu.ii.AnyChange.user.models.ConfirmationToken;
 import tr.edu.metu.ii.AnyChange.user.services.ConfirmationTokenService;
 import tr.edu.metu.ii.AnyChange.user.services.UserService;
+
+import java.util.List;
 
 @Controller
 @AllArgsConstructor
@@ -189,5 +192,42 @@ public class UserController {
             return "managePersonalInformation";
         }
         return "managePersonalInformation";
+    }
+
+    @GetMapping("/managePaymentInformation")
+    String managePaymentInformation(Model model) {
+        PaymentInformationDTO paymentInformationDTO = new PaymentInformationDTO();
+        model.addAttribute("paymentInformation", paymentInformationDTO);
+
+        List<PaymentInformationDTO> paymentInformationDTOList = userService.getPaymentOptionsForCurrentUser();
+        model.addAttribute("matchingPaymentInformation", paymentInformationDTOList);
+        return "managePaymentInformation";
+    }
+
+    @PostMapping("/addPaymentInformation")
+    String addPaymentInformation(@ModelAttribute("paymentInformation") PaymentInformationDTO paymentInformationDTO,
+                                 Model model) {
+        try {
+            userService.addPaymentInformation(paymentInformationDTO);
+        } catch (InvalidCreditCardNumberException e) {
+            model.addAttribute("errorInvalidCardNumber",
+                    "Card number is invalid!");
+            return managePaymentInformation(model);
+        } catch (InvalidSecurityNumberException e) {
+            model.addAttribute("errorInvalidSecurityCode",
+                    "Security code is invalid!");
+            return managePaymentInformation(model);
+        } catch (InvalidExpirationDateException e) {
+            model.addAttribute("errorInvalidExpirationDate",
+                    "Expiration date is invalid!");
+            return managePaymentInformation(model);
+        }
+        return managePaymentInformation(model);
+    }
+
+    @GetMapping("/deletePaymentInformation")
+    String deletePaymentInformation(@RequestParam("id") String id, Model model) {
+        userService.deletePaymentInformation(id);
+        return managePaymentInformation(model);
     }
 }
