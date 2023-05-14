@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+    <title>Products</title>
+</head>
+<body>
+<h1 th:inline="text">Hello <span th:remove="tag" sec:authentication="name">thymeleaf</span>!</h1>
+<form th:action="@{/logout}" method="post">
+    <input type="submit" value="Sign Out"/>
+</form>
+
+<p>Click <a th:href="@{/managePersonalInformation}">here</a> to manage your personal information.</p>
+<p>Click <a th:href="@{/managePaymentInformation}">here</a> to manage your payment information.</p>
+<p>Click <a th:href="@{/manageAccountType}">here</a> to manage your account information.</p>
+
+<p th:if="${isSeller}">Click <a th:href="@{/addNewProduct}">here</a> to add new product.</p>
+
+
+<form th:action="@{/products/search}" method="post">
+    <div>
+        <label> Search for products : <input type="text" name="productName"/></label>
+    </div>
+    <div>
+        <input type="submit" value="Search"/>
+    </div>
+</form>
+
+<table  th:if="${matchingProducts}">
+    <thead>
+    <tr>
+        <th> Id </th>
+        <th> Name </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:if="${matchingProducts.empty}">
+        <td colspan="2"> No Products Matched </td>
+    </tr>
+    <tr th:each="product : ${matchingProducts}">
+        <td><span th:text="${product.id}"> Id </span></td>
+        <td><a th:href="@{/products/product(productId=${product.id})}"><span th:text="${product.name}"> Name </span></a></td>
+    </tr>
+    </tbody>
+</table>
+
+<table  th:if="${monitoredProducts}">
+    <thead>
+    <tr>
+        <th> Id </th>
+        <th> Name </th>
+        <th> Remove From Monitoring List </th>
+        <th th:if="${isSeller}"> Update Product Information </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:if="${monitoredProducts.empty}">
+        <td colspan="2"> You Are Not Monitoring Any Products </td>
+    </tr>
+    <tr th:each="product : ${monitoredProducts}">
+        <td><span th:text="${product.id}"> Id </span></td>
+        <td><a th:href="@{/products/product(productId=${product.id})}"><span th:text="${product.name}"> Name </span></a></td>
+        <td><a th:href="@{/removeMonitor(productId=${product.id})}"><span> X </span></a></td>
+        <td><a th:href="@{/updateProduct(productId=${product.id})}"><span> Click Here </span></a></td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>

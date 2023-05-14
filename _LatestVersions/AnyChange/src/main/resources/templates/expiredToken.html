@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<head>
+  <title>Spring Security Example</title>
+</head>
+<body>
+<h1>Token Confirmation</h1>
+
+<p>You registration token has been expired, click <a th:href="@{/resendConfirmationToken(token=${param.token})}">here</a> to get a new registration token.</p>
+</body>
+</html>
