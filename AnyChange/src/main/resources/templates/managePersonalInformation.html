@@ -24,7 +24,7 @@
         <label> Address : <input type="text" name="address" th:field="*{address}"/></label>
     </div>
     <div>
-        <input type="submit" value="Sign up"/>
+        <input type="submit" value="Save"/>
     </div>
 </form>
 <form th:action="@{/updatePassword}" method="post" th:object="${user}">
@@ -40,7 +40,7 @@
         <span  style="color:red" th:if="${errorNonMatchingPasswords}"  th:text="${errorNonMatchingPasswords}">Error</span>
     </div>
     <div>
-        <input type="submit" value="Sign up"/>
+        <input type="submit" value="Save"/>
     </div>
 </form>
 </body>
