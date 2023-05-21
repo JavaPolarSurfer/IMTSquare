@@ -1,0 +1,547 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="15.1">
+  <zoom_level>8</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>736</x>
+      <y>0</y>
+      <w>240</w>
+      <h>184</h>
+    </coordinates>
+    <panel_attributes>CrudRepository
+--
+save(S entity): S
+saveAll(Iterable&lt;S&gt; entities): Iterable&lt;S&gt;
+findById(ID id): Optional&lt;T&gt;
+existsById(ID id): boolean
+findAll(): Iterable&lt;T&gt;
+findAllById(Iterable&lt;ID&gt; ids): Iterable&lt;T&gt;
+count(): long
+deleteById(ID id): void
+delete(T entity): void 
+deleteAllById(Iterable&lt;? extends ID&gt; ids): void 
+deleteAll(Iterable&lt;? extends T&gt; entities): void 
+deleteAll(): void
+style=autoresize</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1424</x>
+      <y>872</y>
+      <w>24</w>
+      <h>24</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=1
+m2=1</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1704</x>
+      <y>520</y>
+      <w>24</w>
+      <h>24</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1272</x>
+      <y>80</y>
+      <w>272</w>
+      <h>88</h>
+    </coordinates>
+    <panel_attributes>Product::Product
+--
+-id: Long
+-name: String
+-productUrls: List&lt;ProductUrl&gt;
+-productPrices: Map&lt;PriceSource, PriceInformation&gt;
+style=autoresize</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1336</x>
+      <y>232</y>
+      <w>144</w>
+      <h>72</h>
+    </coordinates>
+    <panel_attributes>Product::ProductUrl
+--
+-id: Long
+-url: String
+-priceSource: PriceSource
+style=autoresize</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1344</x>
+      <y>528</y>
+      <w>136</w>
+      <h>56</h>
+    </coordinates>
+    <panel_attributes>Product::PriceInformation
+--
+-id: Long
+-currentPrice: PricePoint
+style=autoresize</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1352</x>
+      <y>384</y>
+      <w>120</w>
+      <h>72</h>
+    </coordinates>
+    <panel_attributes>Product::PriceSource
+--
+-id: Long
+-name: String
+-script: String
+style=autoresize</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1352</x>
+      <y>656</y>
+      <w>120</w>
+      <h>72</h>
+    </coordinates>
+    <panel_attributes>Product::PricePoint
+--
+-id: Long
+-point: LocalDateTime
+-price: double
+style=autoresize</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1400</x>
+      <y>296</y>
+      <w>32</w>
+      <h>104</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=1
+m2=1</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;110.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1400</x>
+      <y>160</y>
+      <w>32</w>
+      <h>88</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=*
+m2=1</panel_attributes>
+    <additional_attributes>10.0;90.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1400</x>
+      <y>576</y>
+      <w>32</w>
+      <h>96</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=1
+m2=1</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;100.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1400</x>
+      <y>448</y>
+      <w>32</w>
+      <h>96</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=*
+m2=*</panel_attributes>
+    <additional_attributes>10.0;100.0;12.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1024</x>
+      <y>240</y>
+      <w>152</w>
+      <h>32</h>
+    </coordinates>
+    <panel_attributes>Product::ProductRepository
+--
+style=autoresize</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>824</x>
+      <y>240</y>
+      <w>160</w>
+      <h>32</h>
+    </coordinates>
+    <panel_attributes>Product::ProductUrlRepository
+--
+style=autoresize</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>600</x>
+      <y>232</y>
+      <w>168</w>
+      <h>32</h>
+    </coordinates>
+    <panel_attributes>Product::PriceSourceRepository
+--
+style=autoresize</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>344</x>
+      <y>232</y>
+      <w>192</w>
+      <h>32</h>
+    </coordinates>
+    <panel_attributes>Product::PriceInformationRepository
+--
+style=autoresize</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>120</x>
+      <y>232</y>
+      <w>160</w>
+      <h>32</h>
+    </coordinates>
+    <panel_attributes>Product::PricePointRepository
+--
+style=autoresize</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>864</x>
+      <y>176</y>
+      <w>248</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;290.0;80.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>864</x>
+      <y>176</y>
+      <w>56</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;50.0;80.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>672</x>
+      <y>176</y>
+      <w>216</w>
+      <h>72</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>250.0;10.0;10.0;70.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>432</x>
+      <y>176</y>
+      <w>456</w>
+      <h>72</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>550.0;10.0;10.0;70.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>184</x>
+      <y>176</y>
+      <w>704</w>
+      <h>72</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>860.0;10.0;10.0;70.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1168</x>
+      <y>112</y>
+      <w>120</w>
+      <h>168</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=*
+m2=1</panel_attributes>
+    <additional_attributes>130.0;10.0;50.0;10.0;50.0;180.0;10.0;180.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>976</x>
+      <y>248</y>
+      <w>376</w>
+      <h>56</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=*
+m2=1</panel_attributes>
+    <additional_attributes>450.0;30.0;340.0;30.0;340.0;50.0;40.0;50.0;40.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>760</x>
+      <y>240</y>
+      <w>608</w>
+      <h>208</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=*
+m2=1</panel_attributes>
+    <additional_attributes>740.0;230.0;610.0;230.0;610.0;80.0;50.0;80.0;50.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>528</x>
+      <y>240</y>
+      <w>832</w>
+      <h>344</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=*
+m2=1</panel_attributes>
+    <additional_attributes>1020.0;400.0;860.0;400.0;860.0;100.0;50.0;100.0;50.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>272</x>
+      <y>240</y>
+      <w>1096</w>
+      <h>480</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=*
+m2=1</panel_attributes>
+    <additional_attributes>1350.0;570.0;1140.0;570.0;1140.0;120.0;60.0;120.0;60.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>544</x>
+      <y>424</y>
+      <w>472</w>
+      <h>240</h>
+    </coordinates>
+    <panel_attributes>Product::ProductService
+--
+-productRepository: ProductRepository
+-productUrlRepository: ProductUrlRepository
+-priceSourceRepository: PriceSourceRepository
+-priceInformationRepository: PriceInformationRepository
+-pricePorintRepository: PricePointRepository
+--
+-initializeRepo(): void
+-getMatchingProducts(keyword: String): List&lt;ProductDTO&gt;
+-getProduct(id: Long):ProductDTO
+-getCurrentPrice(productDTO: ProductDTO, priceSourceDTO: PriceSourceDTO): PricePoint
+-updateCurrentPrices(): void
+-getAvailablePriceSources(productDTO: ProductDTO): List&lt;PriceSourceDTO&gt;
+-monitorProduct(user: User, productId: Long): void
+-getMonitoredProducts(user: User): List&lt;ProductDTO&gt;
+-removeMonitor(user: User, productId: Long): void
+-addNewProduct(productDTO: ProductDTO): void
+-removeProduct(productId: Long): void
+style=autoresize</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>672</x>
+      <y>256</y>
+      <w>32</w>
+      <h>184</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=1
+m2=1</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;210.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>696</x>
+      <y>264</y>
+      <w>224</w>
+      <h>176</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=1
+m2=1</panel_attributes>
+    <additional_attributes>250.0;10.0;250.0;150.0;10.0;150.0;10.0;200.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>720</x>
+      <y>264</y>
+      <w>400</w>
+      <h>176</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=1
+m2=1</panel_attributes>
+    <additional_attributes>470.0;10.0;470.0;170.0;10.0;170.0;10.0;200.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>432</x>
+      <y>256</y>
+      <w>248</w>
+      <h>184</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=1
+m2=1</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;160.0;280.0;160.0;280.0;210.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>184</x>
+      <y>256</y>
+      <w>472</w>
+      <h>184</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=1
+m2=1</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;180.0;560.0;180.0;560.0;210.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>632</x>
+      <y>760</y>
+      <w>144</w>
+      <h>32</h>
+    </coordinates>
+    <panel_attributes>Product::ProductController
+--
+style=autoresize</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>0</x>
+      <y>440</y>
+      <w>448</w>
+      <h>408</h>
+    </coordinates>
+    <panel_attributes>User::UserService
+--
+-userRepository: UserRepository
+-passwordEncoder: BCryptPasswordEncoder
+-confirmationTokenService: ConfirmationTokenService
+-confirmationEmailSenderService: ConfirmationEmailSenderService
+-paymentInformationRepository: PaymentInformationRepository
+--
++loadByUserName(username: String): UserDetails
++validatePassword(password: String, matchingPassword: String): void
++sendConfirmationToken(user: User): void
++checkIfUserExists(userDTO: UserDTO): boolean
++createUser(userDTO: UserDTO): void
++confirmUser(token: String): void
++confirmPasswordResetToken(confirmationToken: ConfirmationToken): void
++createUser(user: User): void
++sendConfirmationMail(email: String, token: String): void
++sendResetPasswordEmail(email: String, token: String): void
++sendResetPasswordToken(user: User): void
++forgotPassword(username: String): void
++resetPassword(token: String, password: String, matchingPassword: String): void
++updateCredentials(userDTO: UserDTO): void
+-validatePhoneNumber(phoneNumber: String): void
++getCurrentUser(): UserDTO
++updatePassword(userDTO: UserDTO): void
++addPaymentInformation(paymentInformationDTO: PaymentInformationDTO): void
+-validateCreditCardInformation(paymentInformationDTO: PaymentInformationDTO): void
++getPaymentInformationsForCurrentUser(): List&lt;PaymentInformationDTO&gt;
++deletePaymentInformation(id: String): void
++upgradeCurrentUserToPremium(id: String): void
++cancelPremiumForCurrentUser(): void
++removeCurrentAccount(): void
+style=autoresize</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>440</x>
+      <y>768</y>
+      <w>208</w>
+      <h>32</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=1
+m2=1</panel_attributes>
+    <additional_attributes>10.0;10.0;240.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>704</x>
+      <y>656</y>
+      <w>32</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=1
+m2=1</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;130.0</additional_attributes>
+  </element>
+</diagram>
