@@ -179,4 +179,16 @@ public class ProductController {
         productService.removeProduct(productId);
         return "redirect:/products";
     }
+
+    @GetMapping("/addNotification")
+    public String addNotification(@RequestParam("productId")long productId) {
+        productService.addNotification(productId);
+        return "redirect:/products";
+    }
+
+    @GetMapping("/removeNotification")
+    public String removeNotification(@RequestParam("productId")long productId) {
+        productService.removeNotification(productId);
+        return "redirect:/products";
+    }
 }

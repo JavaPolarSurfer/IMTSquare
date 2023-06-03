@@ -259,6 +259,28 @@ public class ProductService {
         }
         return null;
     }
+
+    public void addNotification(long productId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null) {
+            String name = authentication.getName();
+            User user = (User) userService.loadUserByUsername(name);
+            Optional<Product> productOptional = productRepository.findById(productId);
+            var product = productOptional.get();
+            user.getNotificationProducts().add(product);
+        }
+    }
+
+    public void removeNotification(long productId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null) {
+            String name = authentication.getName();
+            User user = (User) userService.loadUserByUsername(name);
+            Optional<Product> productOptional = productRepository.findById(productId);
+            var product = productOptional.get();
+            user.getNotificationProducts().remove(product);
+        }
+    }
 }
 
 
