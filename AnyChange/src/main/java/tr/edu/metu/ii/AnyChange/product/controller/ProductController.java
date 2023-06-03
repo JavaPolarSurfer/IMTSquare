@@ -39,9 +39,8 @@ public class ProductController {
             User user = (User)userService.loadUserByUsername(name);
             List<ProductDTO> monitoredProducts = productService.getMonitoredProducts(user);
             model.addAttribute("monitoredProducts", monitoredProducts);
-            if (user.getRole() == UserRole.SELLER) {
-                model.addAttribute("isSeller", true);
-            }
+            model.addAttribute("isSeller", user.getRole() == UserRole.SELLER || user.getRole() == UserRole.ADMIN || user.getRole() == UserRole.SUPER_ADMIN);
+            model.addAttribute("isAdmin", user.getRole() == UserRole.ADMIN || user.getRole() == UserRole.SUPER_ADMIN);
         }
         else {
             throw new RuntimeException("Could not authenticate user!");

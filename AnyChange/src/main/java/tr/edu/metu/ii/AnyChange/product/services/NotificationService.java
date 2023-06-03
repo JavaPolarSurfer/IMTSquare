@@ -16,7 +16,7 @@ public class NotificationService {
     private UserRepository userRepository;
     @Autowired
     private JavaMailSender javaMailSender;
-    
+
     //@Scheduled(fixedRate = 3600000)
     public void sendNotifications() {
         userRepository.findAll().forEach(user -> {

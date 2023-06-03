@@ -71,7 +71,7 @@ public class UserService implements UserDetailsService {
         return optionalUser.isPresent();
     }
 
-    public void createUser(UserDTO userDTO) throws UsernameAlreadyExistsException, PasswordTooShortException, PasswordSpecialCharactersException, PasswordEmptyException, PasswordNotMatchingException, FirstNameEmptyException, LastNameEmptyException {
+    public void createUser(UserDTO userDTO, boolean enabled) throws UsernameAlreadyExistsException, PasswordTooShortException, PasswordSpecialCharactersException, PasswordEmptyException, PasswordNotMatchingException, FirstNameEmptyException, LastNameEmptyException {
         if (checkIfUserExists(userDTO.getEmail())) {
             throw new UsernameAlreadyExistsException("Username already exists!");
         }
@@ -88,8 +88,24 @@ public class UserService implements UserDetailsService {
         user.setFirstName(userDTO.getFirstName());
         user.setLastName(userDTO.getLastName());
         user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+        user.setEnabled(enabled);
         createUser(user);
-        sendConfirmationToken(user);
+        if (!enabled) {
+            sendConfirmationToken(user);
+        }
+        else {
+            sendUserInfoMail(user, userDTO.getPassword());
+        }
+    }
+
+    private void sendUserInfoMail(User user, String clearPassword) {
+        final SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setTo(user.getEmail());
+        mailMessage.setSubject("User information!");
+        mailMessage.setFrom("<MAIL>");
+        mailMessage.setText("You have been registered to AnyChange! Here are your credentials: Username: " + user.getEmail() + " and password: " + clearPassword);
+
+        confirmationEmailSenderService.sendEmail(mailMessage);
     }
 
     public void confirmUser(String token) throws ExpiredTokenException, InvalidConfirmationTokenException {
@@ -332,5 +348,28 @@ public class UserService implements UserDetailsService {
             user.getPaymentInformations().forEach(paymentInformationRepository::delete);
             userRepository.delete(user);
         }
+    }
+
+    public List<UserDTO> getAllUsers() {
+        List<UserDTO> userDTOS = new ArrayList<>();
+        userRepository.findAll().forEach(user -> {
+            UserDTO userDTO = new UserDTO();
+            userDTO.setFirstName(user.getFirstName());
+            userDTO.setLastName(user.getLastName());
+            userDTO.setPassword(user.getPassword());
+            userDTO.setAddress(user.getAddress());
+            userDTO.setEmail(user.getEmail());
+            userDTO.setPhoneNumber(user.getPhoneNumber());
+            userDTO.setAccountType(user.getType());
+            userDTO.setRegularUser(user.getRole() != UserRole.SUPER_ADMIN);
+            userDTOS.add(userDTO);
+        });
+        return userDTOS;
+    }
+
+    public void removeUser(String username) {
+        User user = (User) loadUserByUsername(username);
+        user.getPaymentInformations().forEach(paymentInformationRepository::delete);
+        userRepository.delete(user);
     }
 }
