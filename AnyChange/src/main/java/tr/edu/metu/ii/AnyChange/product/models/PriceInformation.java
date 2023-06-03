@@ -17,4 +17,6 @@ public class PriceInformation {
     private Long id;
     @OneToOne(cascade=CascadeType.ALL)
     private PricePoint currentPrice;
+    @OneToMany
+    private List<PricePoint> priceHistory;
 }

@@ -83,6 +83,15 @@ public class ProductController {
                 try {
                     productPricesDTO.setPriceSourceName(priceSourceDTO.getName());
                     productPricesDTO.setPrice(String.valueOf(productService.getCurrentPrice(productDTO, priceSourceDTO).getPrice()));
+
+                    var priceInfo = productService.getPriceInformation(priceSourceDTO.getName(), productId);
+                    var priceHistory = priceInfo.getPriceHistory();
+                    StringBuilder builder = new StringBuilder();
+                    for (int i = 0; i < 10 && i < priceHistory.size(); ++i) {
+                        builder.append(priceHistory.get(i).getPrice());
+                        builder.append(",");
+                    }
+                    productPricesDTO.setHistory(builder.toString());
                     productPricesDTOS.add(productPricesDTO);
                 } catch (NoSuchPriceSourceException | NoSuchProductException e) {
                     throw new RuntimeException(e);

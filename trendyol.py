@@ -8,14 +8,14 @@ import re
 
 r = requests.get(sys.argv[1])
 soup = BeautifulSoup(r.text, features="html.parser")
-price = soup.find('span', class_='prc-org')
+price = soup.find('span', class_='prc-dsc')
 price_str = price.text
 price_clean = re.search("[+-]?([0-9]*[,])?[0-9]+", price_str).group(0).replace(",",".")
 
 print(price_clean)
 
 ############## For Diapers ##########################
-
+"""
 r_molfix = requests.get("https://www.trendyol.com/molfix/bebek-bezi-4-beden-hiper-ekonomi-paketi-p-31622474?")
 soup_molfix = BeautifulSoup(r_molfix.text, features="html.parser")
 price_molfix =soup_molfix.find("div", {"class": "pr-bx-nm with-org-prc"}).find("span", {"class": "prc-dsc"})
@@ -169,4 +169,4 @@ price_chicco =soup_chicco.find("div", {"class": "pr-bx-nm with-org-prc"}).find("
 price_chicco_str = price_chicco.text
 price_chicco_clean = re.search("[+-]?([0-9]*[,])?[0-9]+", price_chicco_str).group(0).replace(",",".")
 print(price_chicco_clean)
-
+"""

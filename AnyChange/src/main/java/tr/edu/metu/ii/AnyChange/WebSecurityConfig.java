@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import tr.edu.metu.ii.AnyChange.user.models.User;
@@ -36,14 +37,22 @@ public class WebSecurityConfig {
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        User user = new User();
-        user.setEmail("taylan.isikoglu@gmail.com");
-        user.setFirstName("admin");
-        user.setLastName("admin");
-        user.setPassword(passwordEncoder.encode("123123123."));
-        user.setRole(UserRole.SELLER);
-        user.setEnabled(true);
-        userService.createUser(user);
+        try {
+            userService.loadUserByUsername("taylan.isikoglu@gmail.com");
+
+
+        } catch (UsernameNotFoundException e) {
+            User user = new User();
+            user.setEmail("taylan.isikoglu@gmail.com");
+            user.setFirstName("admin");
+            user.setLastName("admin");
+            user.setPassword(passwordEncoder.encode("123123123."));
+            user.setRole(UserRole.SELLER);
+            user.setEnabled(true);
+
+            userService.createUser(user);
+        }
+
         auth.userDetailsService(userService).passwordEncoder(passwordEncoder);
     }
 }

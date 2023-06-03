@@ -8,4 +8,5 @@ import lombok.Setter;
 public class ProductPricesDTO {
     private String priceSourceName;
     private String price;
+    private String history;
 }
