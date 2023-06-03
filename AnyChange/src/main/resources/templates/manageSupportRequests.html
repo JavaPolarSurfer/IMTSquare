@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+  <title>Products</title>
+</head>
+<body>
+
+<table>
+  <thead>
+  <tr>
+    <th> User Name </th>
+    <th> Request </th>
+    <th> Close Request </th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="request : ${requests}">
+    <td><span th:text="${request.userEmail}"> User Name </span></td>
+    <td><span th:text="${request.text}"> Request </span></a></td>
+    <td><a th:href="@{/removeRequest(requestId=${request.id})}"><span> X </span></a></td>
+  </tr>
+  </tbody>
+</table>
+</body>
+</html>

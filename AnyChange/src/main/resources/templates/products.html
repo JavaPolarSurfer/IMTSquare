@@ -13,8 +13,9 @@
 <p>Click <a th:href="@{/managePersonalInformation}">here</a> to manage your personal information.</p>
 <p>Click <a th:href="@{/managePaymentInformation}">here</a> to manage your payment information.</p>
 <p>Click <a th:href="@{/manageAccountType}">here</a> to manage your account information.</p>
+<p>Click <a th:href="@{/requestSupport}">here</a> to request support.</p>
+<p th:if="${isAdmin}">Click <a th:href="@{/manageSupportRequests}">here</a> to manage support requests.</p>
 <p th:if="${isAdmin}">Click <a th:href="@{/manageUsers}">here</a> to manage users.</p>
-
 <p th:if="${isSeller}">Click <a th:href="@{/addNewProduct}">here</a> to add new product.</p>
 
 
