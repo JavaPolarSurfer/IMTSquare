@@ -30,6 +30,8 @@ public class User implements UserDetails {
     private AccountType type = AccountType.STANDART;
     @OneToMany
     private List<Product> monitoredProducts;
+    @OneToMany
+    private List<Product> notificationProducts;
     private String address;
     private String phoneNumber;
     @OneToMany

@@ -15,4 +15,5 @@ public class UserDTO {
     private String address;
     private String phoneNumber;
     private AccountType accountType;
+    private boolean isRegularUser;
 }

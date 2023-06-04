@@ -13,7 +13,9 @@
 <p>Click <a th:href="@{/managePersonalInformation}">here</a> to manage your personal information.</p>
 <p>Click <a th:href="@{/managePaymentInformation}">here</a> to manage your payment information.</p>
 <p>Click <a th:href="@{/manageAccountType}">here</a> to manage your account information.</p>
-
+<p>Click <a th:href="@{/requestSupport}">here</a> to request support.</p>
+<p th:if="${isAdmin}">Click <a th:href="@{/manageSupportRequests}">here</a> to manage support requests.</p>
+<p th:if="${isAdmin}">Click <a th:href="@{/manageUsers}">here</a> to manage users.</p>
 <p th:if="${isSeller}">Click <a th:href="@{/addNewProduct}">here</a> to add new product.</p>
 
 
@@ -50,6 +52,8 @@
         <th> Id </th>
         <th> Name </th>
         <th> Remove From Monitoring List </th>
+        <th> Add For Notification </th>
+        <th> Remove For Notification </th>
         <th th:if="${isSeller}"> Update Product Information </th>
     </tr>
     </thead>
@@ -61,6 +65,8 @@
         <td><span th:text="${product.id}"> Id </span></td>
         <td><a th:href="@{/products/product(productId=${product.id})}"><span th:text="${product.name}"> Name </span></a></td>
         <td><a th:href="@{/removeMonitor(productId=${product.id})}"><span> X </span></a></td>
+        <td><a th:href="@{/addNotification(productId=${product.id})}"><span> X </span></a></td>
+        <td><a th:href="@{/removeNotification(productId=${product.id})}"><span> X </span></a></td>
         <td><a th:href="@{/updateProduct(productId=${product.id})}"><span> Click Here </span></a></td>
     </tr>
     </tbody>

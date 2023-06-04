@@ -98,7 +98,9 @@ public class ProductService {
         productRepository.findAll().forEach(product -> {
             product.getProductUrls().forEach(productUrl -> {
                 PricePoint pricePoint = priceSourceService.fetchCurrentPrice(productUrl);
-                product.getProductPrices().get(productUrl.getPriceSource()).setCurrentPrice(pricePoint);
+                PriceInformation info = product.getProductPrices().get(productUrl.getPriceSource());
+                info.setCurrentPrice(pricePoint);
+                info.getPriceHistory().add(pricePoint);
             });
         });
     }
@@ -242,6 +244,41 @@ public class ProductService {
             }
 
             productRepository.delete(productOptional.get());
+        }
+    }
+
+    public PriceInformation getPriceInformation(String name, long productId) {
+        Optional<Product> productOptional = productRepository.findById(productId);
+        if (productOptional.isPresent()) {
+            Product product = productOptional.get();
+            for (Map.Entry<PriceSource, PriceInformation> e: product.getProductPrices().entrySet()) {
+                if (e.getKey().getName().equals(name)) {
+                    return e.getValue();
+                }
+            }
+        }
+        return null;
+    }
+
+    public void addNotification(long productId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null) {
+            String name = authentication.getName();
+            User user = (User) userService.loadUserByUsername(name);
+            Optional<Product> productOptional = productRepository.findById(productId);
+            var product = productOptional.get();
+            user.getNotificationProducts().add(product);
+        }
+    }
+
+    public void removeNotification(long productId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null) {
+            String name = authentication.getName();
+            User user = (User) userService.loadUserByUsername(name);
+            Optional<Product> productOptional = productRepository.findById(productId);
+            var product = productOptional.get();
+            user.getNotificationProducts().remove(product);
         }
     }
 }

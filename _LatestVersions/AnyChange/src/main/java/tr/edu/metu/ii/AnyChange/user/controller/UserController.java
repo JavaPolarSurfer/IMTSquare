@@ -37,13 +37,15 @@ public class UserController {
     String onSignup(Model model) {
         UserDTO userDto = new UserDTO();
         model.addAttribute("user", userDto);
+        model.addAttribute("userSignup", true);
         return "signup";
     }
 
     @PostMapping("/signup")
     String registerUser(@ModelAttribute("user") UserDTO userDto, Model model) {
+        model.addAttribute("userSignup", true);
         try {
-            userService.createUser(userDto);
+            userService.createUser(userDto, false);
         } catch (UsernameAlreadyExistsException e) {
             model.addAttribute("errorUserAlreadyExists", "User already exists!");
             return "signup";
@@ -262,5 +264,58 @@ public class UserController {
     String removeAccount(Model model) {
         userService.removeCurrentAccount();
         return "home";
+    }
+
+    @GetMapping("/manageUsers")
+    String manageUsers(Model model) {
+        List<UserDTO> users = userService.getAllUsers();
+        model.addAttribute("users", users);
+        return "manageUsers";
+    }
+
+    @GetMapping("/addUser")
+    String addUser(Model model) {
+        UserDTO userDTO = new UserDTO();
+        model.addAttribute("user", userDTO);
+        model.addAttribute("addUser", true);
+        return "signup";
+    }
+
+    @PostMapping("/addUser")
+    String addUser(@ModelAttribute("user") UserDTO userDto, Model model) {
+        model.addAttribute("addUser", true);
+        try {
+            userService.createUser(userDto, true);
+        } catch (UsernameAlreadyExistsException e) {
+            model.addAttribute("errorUserAlreadyExists", "User already exists!");
+            return "signup";
+        } catch (PasswordEmptyException e) {
+            model.addAttribute("errorPasswordEmpty", "Password cannot be empty!");
+            return "signup";
+        } catch (PasswordTooShortException e) {
+            model.addAttribute("errorShortPassword",
+                    "Password is too short, it should be at least 8 characters long!");
+            return "signup";
+        } catch (PasswordNotMatchingException e) {
+            model.addAttribute("errorNonMatchingPasswords", "Passwords do not match!");
+            return "signup";
+        } catch (PasswordSpecialCharactersException e) {
+            model.addAttribute("errorPasswordSpecialCharacters",
+                    "Password must include at least one special character!");
+            return "signup";
+        } catch (FirstNameEmptyException e) {
+            model.addAttribute("errorFirstNameEmpty", "First name cannot be empty!");
+            return "signup";
+        } catch (LastNameEmptyException e) {
+            model.addAttribute("errorLastNameEmpty", "Last name cannot be empty!");
+            return "signup";
+        }
+        return "redirect:/manageUsers";
+    }
+
+    @GetMapping("/removeUser")
+    String removeUser(@RequestParam("username") String username) {
+        userService.removeUser(username);
+        return "redirect:/manageUsers";
     }
 }

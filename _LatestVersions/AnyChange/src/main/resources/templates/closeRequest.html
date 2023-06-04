@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<head>
+  <title>Spring Security Example </title>
+</head>
+<body>
+<form th:action="@{/removeRequest}" method="post" th:object="${request}">
+  <div>
+    <label> Request ID : <input type="text" name="id" th:field="*{id}" readonly="readonly"/></label>
+  </div>
+  <div>
+    <label> Type in your response : <input type="text" name="responseText" th:field="*{responseText}"/></label>
+  </div>
+  <div>
+    <input type="submit" value="Send"/>
+  </div>
+</form>
+</body>
+</html>

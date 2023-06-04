@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+  <title>Products</title>
+</head>
+<body>
+<h1 th:inline="text">Hello <span th:remove="tag" sec:authentication="name">thymeleaf</span>!</h1>
+<form th:action="@{/logout}" method="post">
+  <input type="submit" value="Sign Out"/>
+</form>
+
+<p>Click <a th:href="@{/addUser}">here</a> to add a new user.</p>
+
+<table  th:if="${users}">
+  <thead>
+  <tr>
+    <th> Name </th>
+    <th> Remove User </th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="user : ${users}">
+    <td><span th:text="${user.email}"> Name </span></td>
+    <td><a th:if="${user.isRegularUser}" th:href="@{/removeUser(username=${user.email})}"><span> X </span></a></td>
+  </tr>
+  </tbody>
+</table>
+
+</body>
+</html>

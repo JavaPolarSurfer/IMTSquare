@@ -39,9 +39,8 @@ public class ProductController {
             User user = (User)userService.loadUserByUsername(name);
             List<ProductDTO> monitoredProducts = productService.getMonitoredProducts(user);
             model.addAttribute("monitoredProducts", monitoredProducts);
-            if (user.getRole() == UserRole.SELLER) {
-                model.addAttribute("isSeller", true);
-            }
+            model.addAttribute("isSeller", user.getRole() == UserRole.SELLER || user.getRole() == UserRole.ADMIN || user.getRole() == UserRole.SUPER_ADMIN);
+            model.addAttribute("isAdmin", user.getRole() == UserRole.ADMIN || user.getRole() == UserRole.SUPER_ADMIN);
         }
         else {
             throw new RuntimeException("Could not authenticate user!");
@@ -83,6 +82,15 @@ public class ProductController {
                 try {
                     productPricesDTO.setPriceSourceName(priceSourceDTO.getName());
                     productPricesDTO.setPrice(String.valueOf(productService.getCurrentPrice(productDTO, priceSourceDTO).getPrice()));
+
+                    var priceInfo = productService.getPriceInformation(priceSourceDTO.getName(), productId);
+                    var priceHistory = priceInfo.getPriceHistory();
+                    StringBuilder builder = new StringBuilder();
+                    for (int i = 0; i < 10 && i < priceHistory.size(); ++i) {
+                        builder.append(priceHistory.get(i).getPrice());
+                        builder.append(",");
+                    }
+                    productPricesDTO.setHistory(builder.toString());
                     productPricesDTOS.add(productPricesDTO);
                 } catch (NoSuchPriceSourceException | NoSuchProductException e) {
                     throw new RuntimeException(e);
@@ -168,6 +176,18 @@ public class ProductController {
     @GetMapping("/removeProduct")
     public String removeProduct(@RequestParam("productId")long productId, Model model) throws NoSuchProductException {
         productService.removeProduct(productId);
+        return "redirect:/products";
+    }
+
+    @GetMapping("/addNotification")
+    public String addNotification(@RequestParam("productId")long productId) {
+        productService.addNotification(productId);
+        return "redirect:/products";
+    }
+
+    @GetMapping("/removeNotification")
+    public String removeNotification(@RequestParam("productId")long productId) {
+        productService.removeNotification(productId);
         return "redirect:/products";
     }
 }
